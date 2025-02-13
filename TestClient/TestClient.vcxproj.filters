@@ -15,36 +15,48 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp">
+    <ClCompile Include="Sample.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="pch.cpp">
+    <ClCompile Include="TDebugString.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\교재자료\2D샘플\trunk\ChattingServer_0\Sample.cpp">
+    <ClCompile Include="TRecver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\교재자료\2D샘플\trunk\ChattingServer_0\TAcceptor.cpp">
+    <ClCompile Include="TSender.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\교재자료\2D샘플\trunk\ChattingServer_0\TThread.cpp">
+    <ClCompile Include="TServerObj.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TSynchronize.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TThread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="pch.h">
+    <ClInclude Include="Sample.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\교재자료\2D샘플\trunk\ChattingServer_0\Sample.h">
+    <ClInclude Include="TDebugString.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\교재자료\2D샘플\trunk\ChattingServer_0\TAcceptor.h">
+    <ClInclude Include="TRecver.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\교재자료\2D샘플\trunk\ChattingServer_0\TServerStd.h">
+    <ClInclude Include="TSender.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\교재자료\2D샘플\trunk\ChattingServer_0\TThread.h">
+    <ClInclude Include="TServerObj.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TSynchronize.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TThread.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

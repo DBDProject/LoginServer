@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{3bdb6c2c-eb80-4272-b545-c1ecaead28eb}</ProjectGuid>
-    <RootNamespace>LoginServer</RootNamespace>
+    <ProjectGuid>{3fffd17f-9286-4bad-b625-9fae59c76cc8}</ProjectGuid>
+    <RootNamespace>TestClient</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -71,8 +71,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IntDir>..\..\output\</IntDir>
     <OutDir>..\..\output\debug\</OutDir>
-    <IntDir>..\..\output</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -108,8 +108,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -133,20 +131,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="D:\교재자료\2D샘플\trunk\ChattingServer_0\Sample.cpp" />
-    <ClCompile Include="D:\교재자료\2D샘플\trunk\ChattingServer_0\TAcceptor.cpp" />
-    <ClCompile Include="D:\교재자료\2D샘플\trunk\ChattingServer_0\TThread.cpp" />
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="pch.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-    </ClCompile>
+    <ClCompile Include="Sample.cpp" />
+    <ClCompile Include="TDebugString.cpp" />
+    <ClCompile Include="TRecver.cpp" />
+    <ClCompile Include="TSender.cpp" />
+    <ClCompile Include="TServerObj.cpp" />
+    <ClCompile Include="TSynchronize.cpp" />
+    <ClCompile Include="TThread.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="D:\교재자료\2D샘플\trunk\ChattingServer_0\Sample.h" />
-    <ClInclude Include="D:\교재자료\2D샘플\trunk\ChattingServer_0\TAcceptor.h" />
-    <ClInclude Include="D:\교재자료\2D샘플\trunk\ChattingServer_0\TServerStd.h" />
-    <ClInclude Include="D:\교재자료\2D샘플\trunk\ChattingServer_0\TThread.h" />
-    <ClInclude Include="pch.h" />
+    <ClInclude Include="Sample.h" />
+    <ClInclude Include="TDebugString.h" />
+    <ClInclude Include="TRecver.h" />
+    <ClInclude Include="TSender.h" />
+    <ClInclude Include="TServerObj.h" />
+    <ClInclude Include="TSynchronize.h" />
+    <ClInclude Include="TThread.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
