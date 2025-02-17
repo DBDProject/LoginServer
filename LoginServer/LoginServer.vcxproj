@@ -134,20 +134,31 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="D:\교재자료\2D샘플\trunk\ChattingServer_0\Sample.cpp" />
-    <ClCompile Include="D:\교재자료\2D샘플\trunk\ChattingServer_0\TAcceptor.cpp" />
-    <ClCompile Include="D:\교재자료\2D샘플\trunk\ChattingServer_0\TThread.cpp" />
+    <ClCompile Include="DBDLoginServer.cpp" />
+    <ClCompile Include="HIocp.cpp" />
+    <ClCompile Include="HNetwork.cpp" />
+    <ClCompile Include="HSession.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="HTimer.cpp" />
+    <ClCompile Include="TAcceptor.cpp" />
+    <ClCompile Include="HThread.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="D:\교재자료\2D샘플\trunk\ChattingServer_0\Sample.h" />
-    <ClInclude Include="D:\교재자료\2D샘플\trunk\ChattingServer_0\TAcceptor.h" />
-    <ClInclude Include="D:\교재자료\2D샘플\trunk\ChattingServer_0\TServerStd.h" />
-    <ClInclude Include="D:\교재자료\2D샘플\trunk\ChattingServer_0\TThread.h" />
+    <ClInclude Include="DBDLoginServer.h" />
+    <ClInclude Include="HIocp.h" />
+    <ClInclude Include="HNetwork.h" />
+    <ClInclude Include="HSession.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="HTimer.h" />
+    <ClInclude Include="HSingleton.h" />
+    <ClInclude Include="TAcceptor.h" />
+    <ClInclude Include="HThread.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\.clang-format" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

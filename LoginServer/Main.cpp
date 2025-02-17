@@ -1,7 +1,10 @@
 #include "pch.h"
+#include "DBDLoginServer.h"
 using namespace std;
 
 int main()
 {
-	return 0;
+    DBDLoginServer server;
+    server.Run();
+    return 0;
 }

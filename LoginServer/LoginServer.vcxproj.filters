@@ -5,10 +5,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
@@ -21,13 +17,25 @@
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\교재자료\2D샘플\trunk\ChattingServer_0\Sample.cpp">
+    <ClCompile Include="DBDLoginServer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\교재자료\2D샘플\trunk\ChattingServer_0\TAcceptor.cpp">
+    <ClCompile Include="TAcceptor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\교재자료\2D샘플\trunk\ChattingServer_0\TThread.cpp">
+    <ClCompile Include="HThread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HTimer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HSession.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HIocp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HNetwork.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,17 +43,34 @@
     <ClInclude Include="pch.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\교재자료\2D샘플\trunk\ChattingServer_0\Sample.h">
+    <ClInclude Include="DBDLoginServer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\교재자료\2D샘플\trunk\ChattingServer_0\TAcceptor.h">
+    <ClInclude Include="TAcceptor.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\교재자료\2D샘플\trunk\ChattingServer_0\TServerStd.h">
+    <ClInclude Include="HThread.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\교재자료\2D샘플\trunk\ChattingServer_0\TThread.h">
+    <ClInclude Include="HTimer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="HSession.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HIocp.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HNetwork.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HSingleton.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\.clang-format">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
