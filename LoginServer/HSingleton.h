@@ -8,10 +8,10 @@ template <typename T>
 class HSingleton
 {
 private:
-    HSingleton(const Singleton&)            = delete;
-    HSingleton(Singleton&&)                 = delete;
-    HSingleton& operator=(const Singleton&) = delete;
-    HSingleton& operator=(Singleton&&)      = delete;
+    HSingleton(const HSingleton&)            = delete;
+    HSingleton(HSingleton&&)                 = delete;
+    HSingleton& operator=(const HSingleton&) = delete;
+    HSingleton& operator=(HSingleton&&)      = delete;
 
 protected:
     HSingleton() = default;

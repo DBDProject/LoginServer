@@ -14,7 +14,7 @@ private:
     std::map<SOCKET, UserSession> m_userSessions;
 
 public:
-    bool AddUser(SOCKET socket, sockaddr_in address);
-    bool RemoveUser(SOCKET socket);
+    bool Connect(SOCKET socket, sockaddr_in address);
+    bool DisConnect(SOCKET socket);
     bool IsConnected(SOCKET socket);
 };

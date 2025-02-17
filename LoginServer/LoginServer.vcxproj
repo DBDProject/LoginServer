@@ -143,19 +143,18 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="HTimer.cpp" />
-    <ClCompile Include="TAcceptor.cpp" />
-    <ClCompile Include="HThread.cpp" />
+    <ClCompile Include="HThreadPool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DBDLoginServer.h" />
+    <ClInclude Include="HConvention.h" />
     <ClInclude Include="HIocp.h" />
     <ClInclude Include="HNetwork.h" />
     <ClInclude Include="HSession.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="HTimer.h" />
     <ClInclude Include="HSingleton.h" />
-    <ClInclude Include="TAcceptor.h" />
-    <ClInclude Include="HThread.h" />
+    <ClInclude Include="HThreadPool.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.clang-format" />

@@ -1,11 +1,19 @@
 #pragma once
 #include "pch.h"
-#include "HSession.h"
+#include "HThreadPool.h"
+#include "HNetwork.h"
 
-class HIocp
+class HIocp : public HConvention
 {
 private:
-    HANDLE m_hIocp;
+    HANDLE      m_hIocp;
+    HThreadPool m_threadPool;
+
+    bool m_run = true;
 
 public:
+    void Init() override;
+    void Release() override;
+
+    void WorkerProcess();
 };

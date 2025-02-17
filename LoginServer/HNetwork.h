@@ -6,15 +6,25 @@
 
 #define H_NETWORK HNetwork::GetInstance()
 
-class HNetwork : public HSingleton<HNetwork>
+class HNetwork : public HSingleton<HNetwork>, HConvention
 {
 private:
+    WSADATA m_wsadata;
+    SOCKET  m_serverSocket;
+
     H_SINGLETON_DECLARE(HNetwork)
 
 public:
     std::shared_ptr<HSession> m_sessionManager;
 
+private:
+    void InitWinSock();
+
 public:
-    void Init();
-    void Release();
+    void Init() override;
+    void Release() override;
+
+    bool HasSockError();
+    void PrintSockError();
+    void CreateServer(std::string ip, int port);
 };

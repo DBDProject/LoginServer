@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "HSession.h"
 
-bool HSession::AddUser(SOCKET socket, sockaddr_in address)
+bool HSession::Connect(SOCKET socket, sockaddr_in address)
 {
     if (m_userSessions.contains(socket))
     {
@@ -21,11 +21,12 @@ bool HSession::AddUser(SOCKET socket, sockaddr_in address)
     }
 }
 
-bool HSession::RemoveUser(SOCKET socket)
+bool HSession::DisConnect(SOCKET socket)
 {
     if (m_userSessions.contains(socket))
     {
         m_userSessions.erase(socket);
+        closesocket(socket);
         return true;
     }
     return false;
@@ -33,6 +34,5 @@ bool HSession::RemoveUser(SOCKET socket)
 
 bool HSession::IsConnected(SOCKET socket)
 {
-
     return false;
 }

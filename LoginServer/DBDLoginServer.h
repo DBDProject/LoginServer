@@ -2,16 +2,19 @@
 
 #include "HNetwork.h"
 #include "HTimer.h"
+#include "HIocp.h"
 
-class DBDLoginServer
+class DBDLoginServer : public HConvention
 {
 private:
     HTimer m_systemTimer;
+    HIocp  m_iocp;
 
 protected:
-    void Init();
+    void Init() override;
+    void Release() override;
+
     void Update();
-    void Release();
 
 public:
     DBDLoginServer()  = default;

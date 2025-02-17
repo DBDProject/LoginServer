@@ -3,10 +3,8 @@
 
 void DBDLoginServer::Init()
 {
-    WSADATA wsadata;
-    WSAStartup(MAKEWORD(2, 2), &wsadata);
-
     H_NETWORK.Init();
+    m_iocp.Init();
 }
 
 void DBDLoginServer::Update()
@@ -17,6 +15,7 @@ void DBDLoginServer::Update()
 void DBDLoginServer::Release()
 {
     H_NETWORK.Release();
+    m_iocp.Release();
 }
 
 void DBDLoginServer::Run()
