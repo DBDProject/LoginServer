@@ -31,6 +31,7 @@ void HThreadPool::SetTask(std::function<void()> task)
 
 void HThreadPool::Run()
 {
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     m_isReady = true;
     m_readyCondition.notify_all();
 }

@@ -21,6 +21,9 @@ void DBDLoginServer::Release()
 void DBDLoginServer::Run()
 {
     Init();
+
+    LOG_INFO("Server Start\n");
+
     while (true)
     {
         this->Update();

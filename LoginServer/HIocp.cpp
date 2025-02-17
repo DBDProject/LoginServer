@@ -9,6 +9,7 @@ void HIocp::Init()
         H_NETWORK.PrintSockError();
 
     m_threadPool.SetTask(std::bind(&HIocp::WorkerProcess, this));
+    m_threadPool.Run();
 }
 
 void HIocp::Release()
