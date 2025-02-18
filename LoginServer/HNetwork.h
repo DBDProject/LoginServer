@@ -25,7 +25,10 @@ public:
     void Release() override;
 
     bool HasSockError();
-    void PrintSockError();
-    void CreateServer(std::string ip, int port);
     bool AcceptClient();
+
+    void PrintSockError();
+    void CreateServer(int port);
+
+    std::string GetServerIP();
 };

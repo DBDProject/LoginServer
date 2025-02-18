@@ -58,7 +58,7 @@ void HNetwork::PrintSockError()
     LocalFree(lpMsgBuffer);
 }
 
-void HNetwork::CreateServer(std::string ip, int port)
+void HNetwork::CreateServer(int port)
 {
     SOCKADDR_IN sa;
     m_serverSocket = socket(AF_INET, SOCK_STREAM, 0);
@@ -82,9 +82,41 @@ void HNetwork::CreateServer(std::string ip, int port)
     u_long iNonSocket = TRUE;
     int    iMode      = ioctlsocket(m_serverSocket, FIONBIO, &iNonSocket);
 
-    LOG_INFO("========================================\n");
-    LOG_INFO("Set Server IP : {} Port : {}\n", ip, port);
-    LOG_INFO("========================================\n");
+    LOG_INFO("===============================================\n");
+    LOG_INFO("Server created | IP : {} Port : {}\n", GetServerIP(), port);
+    LOG_INFO("===============================================\n");
+}
+
+std::string HNetwork::GetServerIP()
+{
+    char        hostname[256];
+    char        ipStr[INET_ADDRSTRLEN];
+    std::string ip;
+
+    if (gethostname(hostname, sizeof(hostname)) == SOCKET_ERROR)
+    {
+        LOG_ERROR("gethostname failed\n");
+        return ip;
+    }
+
+    addrinfo hints;
+    ZeroMemory(&hints, sizeof(hints));
+    hints.ai_family   = AF_INET;  // IPv4¸¸
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_protocol = IPPROTO_TCP;
+
+    addrinfo* result = nullptr;
+    if (getaddrinfo(hostname, nullptr, &hints, &result) != 0)
+    {
+        LOG_ERROR("getaddrinfo failed\n");
+        return ip;
+    }
+
+    sockaddr_in* addr = reinterpret_cast<sockaddr_in*>(result->ai_addr);
+    inet_ntop(AF_INET, &addr->sin_addr, ipStr, sizeof(ipStr));
+    ip = ipStr;
+
+    return ip;
 }
 
 bool HNetwork::AcceptClient()

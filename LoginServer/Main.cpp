@@ -4,14 +4,8 @@ using namespace std;
 
 int main()
 {
-    ServerDesc serverDesc;
-    {
-        serverDesc.ip   = "127.0.0.1";
-        serverDesc.port = 5000;
-    }
-
     DBDLoginServer server;
-    server.SetServerDesc(serverDesc);
+    server.SetServerPort(5000);
     server.Run();
     return 0;
 }

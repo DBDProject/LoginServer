@@ -3,21 +3,20 @@
 
 bool HSession::Connect(SOCKET socket, const sockaddr_in& address)
 {
-    if (m_userSessions.contains(socket))
-    {
-        if (IsConnected(socket))
-            return false;
+    if (IsConnected(socket))
+        return false;
 
-        m_userSessions[socket].address = address;
-    }
-    else
-    {
-        UserSession userSession;
-        userSession.address     = address;
-        userSession.socket      = socket;
-        userSession.isConnected = true;
-        m_userSessions[socket]  = userSession;
-    }
+    UserSession userSession;
+    userSession.address     = address;
+    userSession.socket      = socket;
+    userSession.isConnected = true;
+    m_userSessions[socket]  = userSession;
+
+    LOG_INFO("===============================================\n");
+    LOG_INFO("Client Connected : IP : {} Port : {}\n",
+             inet_ntoa(address.sin_addr),
+             ntohs(address.sin_port));
+    LOG_INFO("===============================================\n");
 
     return true;
 }
@@ -35,5 +34,8 @@ bool HSession::DisConnect(SOCKET socket)
 
 bool HSession::IsConnected(SOCKET socket)
 {
-    return false;
+    if (!m_userSessions.contains(socket))
+        return false;
+
+    return m_userSessions[socket].isConnected;
 }
