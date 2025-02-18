@@ -31,11 +31,11 @@
 #include <fmt/color.h>
 
 #define LOG_ERROR(format, ...) \
-    fmt::print(fmt::fg(fmt::color::indian_red), FMT_STRING(format), ##__VA_ARGS__)
+    fmt::print(fmt::fg(fmt::color::indian_red), FMT_STRING(format), ##__VA_ARGS__##);
 #define LOG_INFO(format, ...) \
-    fmt::print(fmt::fg(fmt::color::green_yellow), FMT_STRING(format), ##__VA_ARGS__)
+    fmt::print(fmt::fg(fmt::color::green_yellow), FMT_STRING(format), ##__VA_ARGS__##);
 #define LOG_WARNING(format, ...) \
-    fmt::print(fmt::fg(fmt::color::yellow), FMT_STRING(format), ##__VA_ARGS__)
+    fmt::print(fmt::fg(fmt::color::yellow), FMT_STRING(format), ##__VA_ARGS__##);
 
 #include "HConvention.h"
 #include "HSingleton.h"

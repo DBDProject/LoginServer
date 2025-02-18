@@ -15,7 +15,7 @@ private:
     H_SINGLETON_DECLARE(HNetwork)
 
 public:
-    std::shared_ptr<HSession> m_sessionManager;
+    std::unique_ptr<HSession> m_sessionManager;
 
 private:
     void InitWinSock();

@@ -27,4 +27,6 @@ public:
 
     void SetTask(std::function<void()> task);
     void Run();
+
+    static std::string ConvertThreadIdToStr(std::thread::id threadId);
 };

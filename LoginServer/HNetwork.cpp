@@ -14,7 +14,7 @@ void HNetwork::InitWinSock()
 
 void HNetwork::Init()
 {
-    m_sessionManager = std::make_shared<HSession>();
+    m_sessionManager = std::unique_ptr<HSession>();
     InitWinSock();
 }
 
@@ -82,9 +82,9 @@ void HNetwork::CreateServer(int port)
     u_long iNonSocket = TRUE;
     int    iMode      = ioctlsocket(m_serverSocket, FIONBIO, &iNonSocket);
 
-    LOG_INFO("===============================================\n");
-    LOG_INFO("Server created | IP : {} Port : {}\n", GetServerIP(), port);
-    LOG_INFO("===============================================\n");
+    LOG_INFO("===============================================\n")
+    LOG_INFO("Server created | IP : {} Port : {}\n", GetServerIP(), port)
+    LOG_INFO("===============================================\n")
 }
 
 std::string HNetwork::GetServerIP()
@@ -95,7 +95,7 @@ std::string HNetwork::GetServerIP()
 
     if (gethostname(hostname, sizeof(hostname)) == SOCKET_ERROR)
     {
-        LOG_ERROR("gethostname failed\n");
+        LOG_ERROR("gethostname failed\n")
         return ip;
     }
 
@@ -108,7 +108,7 @@ std::string HNetwork::GetServerIP()
     addrinfo* result = nullptr;
     if (getaddrinfo(hostname, nullptr, &hints, &result) != 0)
     {
-        LOG_ERROR("getaddrinfo failed\n");
+        LOG_ERROR("getaddrinfo failed\n")
         return ip;
     }
 

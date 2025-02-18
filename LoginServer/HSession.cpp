@@ -12,11 +12,11 @@ bool HSession::Connect(SOCKET socket, const sockaddr_in& address)
     userSession.isConnected = true;
     m_userSessions[socket]  = userSession;
 
-    LOG_INFO("===============================================\n");
-    LOG_INFO("Client Connected : IP : {} Port : {}\n",
+    LOG_INFO("===============================================")
+    LOG_INFO("Client Connected : IP : {} Port : {}",
              inet_ntoa(address.sin_addr),
-             ntohs(address.sin_port));
-    LOG_INFO("===============================================\n");
+             ntohs(address.sin_port))
+    LOG_INFO("===============================================")
 
     return true;
 }

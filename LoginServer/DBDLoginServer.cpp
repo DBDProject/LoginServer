@@ -31,10 +31,15 @@ void DBDLoginServer::Run()
 
     while (true)
     {
-        this->Update();
+        Update();
 
         if (!H_NETWORK.AcceptClient())
             break;
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+        break;
     }
-    this->Release();
+
+    Release();
+    LOG_INFO("Server terminated\n")
 }
