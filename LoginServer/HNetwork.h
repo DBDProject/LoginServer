@@ -27,4 +27,5 @@ public:
     bool HasSockError();
     void PrintSockError();
     void CreateServer(std::string ip, int port);
+    bool AcceptClient();
 };

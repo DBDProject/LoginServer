@@ -4,11 +4,20 @@
 #include "HTimer.h"
 #include "HIocp.h"
 
+struct ServerDesc
+{
+    std::string ip;
+    int         port;
+
+    ServerDesc() = default;
+};
+
 class DBDLoginServer : public HConvention
 {
 private:
-    HTimer m_systemTimer;
-    HIocp  m_iocp;
+    HTimer     m_systemTimer;
+    HIocp      m_iocp;
+    ServerDesc m_serverDesc;
 
 protected:
     void Init() override;
@@ -20,5 +29,6 @@ public:
     DBDLoginServer()  = default;
     ~DBDLoginServer() = default;
 
+    void SetServerDesc(const ServerDesc& serverDesc);
     void Run();
 };

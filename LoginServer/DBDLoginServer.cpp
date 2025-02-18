@@ -5,6 +5,8 @@ void DBDLoginServer::Init()
 {
     H_NETWORK.Init();
     m_iocp.Init();
+    H_NETWORK.CreateServer(m_serverDesc.ip, m_serverDesc.port);
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 }
 
 void DBDLoginServer::Update()
@@ -18,6 +20,11 @@ void DBDLoginServer::Release()
     m_iocp.Release();
 }
 
+void DBDLoginServer::SetServerDesc(const ServerDesc& serverDesc)
+{
+    m_serverDesc = serverDesc;
+}
+
 void DBDLoginServer::Run()
 {
     Init();
@@ -27,6 +34,9 @@ void DBDLoginServer::Run()
     while (true)
     {
         this->Update();
+
+        if (!H_NETWORK.AcceptClient())
+            break;
     }
     this->Release();
 }

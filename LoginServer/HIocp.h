@@ -9,7 +9,7 @@ private:
     HANDLE      m_hIocp;
     HThreadPool m_threadPool;
 
-    bool m_run = true;
+    bool m_isRunning = true;
 
 public:
     void Init() override;

@@ -27,11 +27,19 @@ void HNetwork::Release()
 bool HNetwork::HasSockError()
 {
     int errorCode = WSAGetLastError();
-    if (errorCode != WSAEWOULDBLOCK)
+
+    switch (errorCode)
     {
-        PrintSockError();
+    case WSAEWOULDBLOCK:
         return false;
+        break;
+
+    case ERROR_IO_PENDING:
+        return false;
+        break;
     }
+
+    PrintSockError();
     return true;
 }
 
@@ -46,7 +54,7 @@ void HNetwork::PrintSockError()
                    (LPSTR)&lpMsgBuffer,
                    0,
                    NULL);
-    std::cout << "ERROR(" << errorCode << "):" << (char*)lpMsgBuffer << std::endl;
+    LOG_ERROR("ERROR({}):{}\n", errorCode, (char*)lpMsgBuffer);
     LocalFree(lpMsgBuffer);
 }
 
@@ -73,4 +81,28 @@ void HNetwork::CreateServer(std::string ip, int port)
 
     u_long iNonSocket = TRUE;
     int    iMode      = ioctlsocket(m_serverSocket, FIONBIO, &iNonSocket);
+
+    LOG_INFO("========================================\n");
+    LOG_INFO("Set Server IP : {} Port : {}\n", ip, port);
+    LOG_INFO("========================================\n");
+}
+
+bool HNetwork::AcceptClient()
+{
+    SOCKADDR_IN addr;
+    int         addrlen     = sizeof(addr);
+    int         iMsgCounter = 0;
+    SOCKET      clientSock  = accept(m_serverSocket, (sockaddr*)&addr, &addrlen);
+
+    if (clientSock == INVALID_SOCKET)
+    {
+        if (HasSockError())
+            return false;
+    }
+    else
+    {
+        m_sessionManager->Connect(clientSock, addr);
+    }
+
+    return true;
 }

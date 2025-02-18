@@ -1,24 +1,25 @@
 #include "pch.h"
 #include "HSession.h"
 
-bool HSession::Connect(SOCKET socket, sockaddr_in address)
+bool HSession::Connect(SOCKET socket, const sockaddr_in& address)
 {
     if (m_userSessions.contains(socket))
     {
         if (IsConnected(socket))
-        {
             return false;
-        }
 
         m_userSessions[socket].address = address;
     }
     else
     {
         UserSession userSession;
-        userSession.address    = address;
-        userSession.socket     = socket;
-        m_userSessions[socket] = userSession;
+        userSession.address     = address;
+        userSession.socket      = socket;
+        userSession.isConnected = true;
+        m_userSessions[socket]  = userSession;
     }
+
+    return true;
 }
 
 bool HSession::DisConnect(SOCKET socket)

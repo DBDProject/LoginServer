@@ -3,17 +3,29 @@
 
 void HThreadPool::ProcessThread()
 {
-    std::unique_lock<std::mutex> lock(m_readyMutex);
-    m_readyCondition.wait(lock, [this] { return m_isReady; });
+    std::ostringstream oss;
+    std::string        threadId;
+
+    oss << std::this_thread::get_id();
+    threadId = oss.str();
+    {
+        std::unique_lock<std::mutex> lock(m_readyMutex);
+        LOG_INFO("Thread {} : Get to ready\n", threadId);
+        m_readyCondition.wait(lock, [this] { return m_isReady; });
+    }
+    LOG_INFO("Thread {} : Start\n", threadId);
     m_task();
 }
 
 void HThreadPool::Init()
 {
+    LOG_INFO("ThreadPool Init\n");
+    LOG_INFO("Thread Count : {}\n", m_numThread);
     for (size_t i = 0; i < m_numThread; i++)
     {
         m_workers.push_back(std::thread(&HThreadPool::ProcessThread, this));
     }
+    LOG_INFO("ThreadPool Init Complete\n");
 }
 
 void HThreadPool::Release()
@@ -31,7 +43,8 @@ void HThreadPool::SetTask(std::function<void()> task)
 
 void HThreadPool::Run()
 {
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    LOG_INFO("ThreadPool Run\n");
     m_isReady = true;
     m_readyCondition.notify_all();
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
 }
