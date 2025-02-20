@@ -24,9 +24,9 @@ void HIocp::Release()
 
 void HIocp::WorkerProcess()
 {
-    DWORD        dwTransfer;
-    ULONG_PTR    CompletionKey;
-    LPOVERLAPPED lpOverlapped = nullptr;
+    DWORD     dwTransfer;
+    ULONG_PTR CompletionKey;
+    HOverlap* lpOverlapped = nullptr;
 
     while (m_isRunning)
     {
@@ -36,12 +36,14 @@ void HIocp::WorkerProcess()
                                              (LPOVERLAPPED*)&lpOverlapped,
                                              3000);
 
+        UserSession* pSession = (UserSession*)CompletionKey;
+
         //// 어떤 유저의 비동기 작업인지 알수가 있다.
-        // if (pSession && lpOverlapped && lpOverlapped->iIOFlag == tOV::t_END)
-        //{
-        //     pSession->m_bDisConnected = true;
-        //     continue;
-        // }
+        if (pSession && lpOverlapped && lpOverlapped->rwFlag == RW_FLAG::RW_END)
+        {
+            H_NETWORK.m_sessionManager->DisConnect(pSession->socket);
+            continue;
+        }
         // if (ret == TRUE)
         //{
         //     if (dwTransfer == 0)

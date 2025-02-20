@@ -1,5 +1,6 @@
 #pragma once
 #include "pch.h"
+#include "HOverlap.h"
 #include "HThreadPool.h"
 #include "HNetwork.h"
 

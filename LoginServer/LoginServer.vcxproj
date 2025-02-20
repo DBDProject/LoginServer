@@ -154,6 +154,7 @@
     <ClInclude Include="HConvention.h" />
     <ClInclude Include="HIocp.h" />
     <ClInclude Include="HNetwork.h" />
+    <ClInclude Include="HOverlap.h" />
     <ClInclude Include="HSession.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="HTimer.h" />

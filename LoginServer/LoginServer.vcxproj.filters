@@ -64,6 +64,9 @@
     <ClInclude Include="HConvention.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="HOverlap.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.clang-format">
