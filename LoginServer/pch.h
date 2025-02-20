@@ -39,5 +39,6 @@
 
 #include "HConvention.h"
 #include "HSingleton.h"
+#include "HOverlap.h"
 
 using namespace std::chrono;

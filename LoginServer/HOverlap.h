@@ -1,5 +1,5 @@
 #pragma once
-#include "pch.h"
+#include <WinSock2.h>
 
 #define MAX_BUFFER_SIZE 1024
 

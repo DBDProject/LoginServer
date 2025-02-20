@@ -26,7 +26,7 @@
     <ClCompile Include="HTimer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="HSession.cpp">
+    <ClCompile Include="HSessionManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="HIocp.cpp">
@@ -49,7 +49,7 @@
     <ClInclude Include="HTimer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="HSession.h">
+    <ClInclude Include="HSessionManager.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="HIocp.h">

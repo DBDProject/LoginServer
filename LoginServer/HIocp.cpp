@@ -25,43 +25,44 @@ void HIocp::Release()
 void HIocp::WorkerProcess()
 {
     DWORD     dwTransfer;
-    ULONG_PTR CompletionKey;
+    ULONG_PTR completionKey;
     HOverlap* lpOverlapped = nullptr;
 
     while (m_isRunning)
     {
         BOOL ret = GetQueuedCompletionStatus(m_hIocp,
                                              &dwTransfer,
-                                             &CompletionKey,
+                                             &completionKey,
                                              (LPOVERLAPPED*)&lpOverlapped,
-                                             3000);
+                                             INFINITE);
 
-        UserSession* pSession = (UserSession*)CompletionKey;
+        UserSession* pSession = (UserSession*)completionKey;
 
-        //// 어떤 유저의 비동기 작업인지 알수가 있다.
-        if (pSession && lpOverlapped && lpOverlapped->rwFlag == RW_FLAG::RW_END)
-        {
-            H_NETWORK.m_sessionManager->DisConnect(pSession->socket);
+        if (!lpOverlapped || !pSession)
             continue;
+
+        if (ret == TRUE)
+        {
+            if (lpOverlapped->rwFlag == RW_FLAG::RW_END)
+            {
+                H_NETWORK.m_sessionManager->DisConnect(pSession->socket);
+                continue;
+            }
+
+            if (dwTransfer == 0)
+            {
+                lpOverlapped->rwFlag = RW_FLAG::RW_END;
+                PostQueuedCompletionStatus(m_hIocp, 0, completionKey, (LPOVERLAPPED)lpOverlapped);
+                continue;
+            }
+            else
+            {
+                pSession->Dispatch(dwTransfer, lpOverlapped);
+            }
         }
-        // if (ret == TRUE)
-        //{
-        //     if (dwTransfer == 0)
-        //     {
-        //         // 유저 정상적으로 탈퇴
-        //         lpOverlapped->iIOFlag = tOV::t_END;
-        //         PostQueuedCompletionStatus(iocp->g_hIOCP, 0, CompletionKey,
-        //         (LPOVERLAPPED)lpOverlapped); continue;
-        //     }
-        //     if (pSession->Dispatch(dwTransfer, lpOverlapped))
-        //     {
-        //         // 통계처리, 별도처리
-        //     }
-        // }
-        // else
-        //{
-        //     lpOverlapped->iIOFlag = tOV::t_END;
-        //     PostQueuedCompletionStatus(iocp->g_hIOCP, 0, CompletionKey, (LPOVERLAPPED)lpOverlapped);
-        // }
+        else
+        {
+            H_NETWORK.PrintSockError();
+        }
     }
 }

@@ -14,7 +14,7 @@ void HNetwork::InitWinSock()
 
 void HNetwork::Init()
 {
-    m_sessionManager = std::unique_ptr<HSession>();
+    m_sessionManager = std::make_unique<HSessionManager>();
     InitWinSock();
 }
 
@@ -141,5 +141,5 @@ bool HNetwork::AcceptClient()
 
 bool HNetwork::ProcessPactket()
 {
-    return false;
+    return true;
 }

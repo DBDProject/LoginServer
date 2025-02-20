@@ -2,7 +2,7 @@
 
 #include "pch.h"
 #include "HSingleton.h"
-#include "HSession.h"
+#include "HSessionManager.h"
 
 #define H_NETWORK HNetwork::GetInstance()
 
@@ -15,7 +15,7 @@ private:
     H_SINGLETON_DECLARE(HNetwork)
 
 public:
-    std::unique_ptr<HSession> m_sessionManager;
+    std::unique_ptr<HSessionManager> m_sessionManager;
 
 private:
     void InitWinSock();
