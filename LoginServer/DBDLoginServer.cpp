@@ -36,8 +36,8 @@ void DBDLoginServer::Run()
         if (!H_NETWORK.AcceptClient())
             break;
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(3000));
-        break;
+        if (!H_NETWORK.ProcessPactket())
+            break;
     }
 
     Release();

@@ -26,6 +26,7 @@ public:
 
     bool HasSockError();
     bool AcceptClient();
+    bool ProcessPactket();
 
     void PrintSockError();
     void CreateServer(int port);

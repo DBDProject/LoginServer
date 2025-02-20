@@ -138,3 +138,8 @@ bool HNetwork::AcceptClient()
 
     return true;
 }
+
+bool HNetwork::ProcessPactket()
+{
+    return false;
+}

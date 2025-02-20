@@ -19,6 +19,7 @@ void HIocp::Release()
     m_isRunning = false;
     m_threadPool.Release();
     CloseHandle(m_hIocp);
+    LOG_INFO("Iocp release\n")
 }
 
 void HIocp::WorkerProcess()
