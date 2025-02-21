@@ -82,6 +82,10 @@ void HNetwork::CreateServer(int port)
     u_long iNonSocket = TRUE;
     int    iMode      = ioctlsocket(m_serverSocket, FIONBIO, &iNonSocket);
 
+    // Nagle 알고리즘 끄기 (TCP_NODELAY 설정)
+    int flag = 1;
+    setsockopt(m_serverSocket, IPPROTO_TCP, TCP_NODELAY, (char*)&flag, sizeof(flag));
+
     LOG_INFO("===============================================\n")
     LOG_INFO("Server created | IP : {} Port : {}\n", GetServerIP(), port)
     LOG_INFO("===============================================\n")

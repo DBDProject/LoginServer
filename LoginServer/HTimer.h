@@ -17,6 +17,7 @@ private:
 
 public:
     HTimer();
+    ~HTimer() = default;
 
     float GetDeltaTime() const;
     float GetElapsedTime() const;
