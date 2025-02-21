@@ -3,25 +3,21 @@
 
 HSessionManager::~HSessionManager()
 {
-    for (auto& [socket, userSession] : m_userSessions)
+    for (auto& [socket, HSession] : m_hSessions)
     {
-        closesocket(userSession.socket);
+        closesocket(HSession.socket);
     }
 }
 
-bool HSessionManager::Connect(SOCKET socket, const sockaddr_in& address)
+void HSessionManager::Connect(SOCKET socket, const sockaddr_in& address)
 {
-    if (IsConnected(socket))
-        return false;
-
-    UserSession userSession;
-    userSession.address       = address;
-    userSession.socket        = socket;
-    userSession.connectedTime = steady_clock::now();
+    HSession HSession;
+    HSession.address = address;
+    HSession.socket  = socket;
 
     {
         std::lock_guard<std::mutex> lock(m_mutex);
-        m_userSessions[socket] = userSession;
+        m_hSessions[socket] = HSession;
     }
 
     LOG_INFO("===============================================\n")
@@ -29,63 +25,58 @@ bool HSessionManager::Connect(SOCKET socket, const sockaddr_in& address)
              inet_ntoa(address.sin_addr),
              ntohs(address.sin_port))
     LOG_INFO("===============================================\n")
-
-    return true;
 }
 
-bool HSessionManager::DisConnect(SOCKET socket)
+void HSessionManager::DisConnect(SOCKET socket)
 {
-    UserSession userSession;
-    bool        isDisConnect = false;
+    bool isDisconnect = false;
+
+    HSession HSession;
     {
         std::lock_guard<std::mutex> lock(m_mutex);
-        if (m_userSessions.contains(socket))
+        if (m_hSessions.contains(socket))
         {
-            userSession = m_userSessions[socket];
-            m_userSessions.erase(socket);
-            isDisConnect = true;
+            HSession = m_hSessions[socket];
+            m_disConnectQueue.push(socket);
+            isDisconnect = true;
         }
     }
 
-    if (isDisConnect)
+    if (isDisconnect)
     {
-        closesocket(userSession.socket);
         LOG_INFO("===============================================\n")
         LOG_INFO("Client disconnected : IP : {} Port : {}\n",
-                 inet_ntoa(userSession.address.sin_addr),
-                 ntohs(userSession.address.sin_port))
+                 inet_ntoa(HSession.address.sin_addr),
+                 ntohs(HSession.address.sin_port))
         LOG_INFO("===============================================\n")
     }
-
-    return isDisConnect;
 }
 
 bool HSessionManager::IsConnected(SOCKET socket)
 {
     std::lock_guard<std::mutex> lock(m_mutex);
-    return m_userSessions.contains(socket);
+    return m_hSessions.contains(socket);
 }
 
 void HSessionManager::Broadcast(const char* data, int size) {}
 
-void HSessionManager::CheckTimeOut()
+void HSessionManager::DelUser()
 {
     std::lock_guard<std::mutex> lock(m_mutex);
-    for (auto& [socket, userSession] : m_userSessions)
+    while (!m_disConnectQueue.empty())
     {
-        auto currentTime = steady_clock::now();
-        auto duration    = duration_cast<seconds>(currentTime - userSession.connectedTime);
-
-        if (duration.count() > TIME_OUT)
-            userSession.SendPacket("Time out test", 8);
+        SOCKET socket = m_disConnectQueue.front();
+        m_hSessions.erase(socket);
+        closesocket(socket);
+        m_disConnectQueue.pop();
     }
 }
 
-UserSession* HSessionManager::GetUserSession(SOCKET socket)
+HSession* HSessionManager::GetSession(SOCKET socket)
 {
     std::lock_guard<std::mutex> lock(m_mutex);
-    if (!m_userSessions.contains(socket))
+    if (!m_hSessions.contains(socket))
         return nullptr;
 
-    return &m_userSessions[socket];
+    return &m_hSessions[socket];
 }

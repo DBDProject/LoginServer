@@ -37,6 +37,8 @@
 #define LOG_WARNING(format, ...) \
     fmt::print(fmt::fg(fmt::color::yellow), FMT_STRING(format), ##__VA_ARGS__##);
 
+#define PRINT_SOCKET_ERROR() H_NETWORK.PrintSockError(WSAGetLastError());
+
 #include "HConvention.h"
 #include "HSingleton.h"
 #include "HOverlap.h"

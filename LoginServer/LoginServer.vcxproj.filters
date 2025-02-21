@@ -35,6 +35,9 @@
     <ClCompile Include="HNetwork.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="HSession.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -67,6 +70,7 @@
     <ClInclude Include="HOverlap.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="HSession.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.clang-format">

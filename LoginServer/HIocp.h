@@ -2,7 +2,6 @@
 #include "pch.h"
 #include "HOverlap.h"
 #include "HThreadPool.h"
-#include "HNetwork.h"
 
 class HIocp : public HConvention
 {
@@ -13,8 +12,13 @@ private:
     bool m_isRunning = true;
 
 public:
+    HIocp()  = default;
+    ~HIocp() = default;
+
     void Init() override;
     void Release() override;
 
     void WorkerProcess();
+
+    HANDLE GetIocpHandle() { return m_hIocp; }
 };

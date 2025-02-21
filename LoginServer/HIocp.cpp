@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "HIocp.h"
+#include "HNetwork.h"
 
 void HIocp::Init()
 {
@@ -7,7 +8,7 @@ void HIocp::Init()
     m_threadPool.Init();
     m_hIocp = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, 0, 0);
     if (m_hIocp == NULL)
-        H_NETWORK.PrintSockError();
+        exit(1);
 
     m_threadPool.SetTask(std::bind(&HIocp::WorkerProcess, this));
     m_threadPool.Run();
@@ -28,6 +29,8 @@ void HIocp::WorkerProcess()
     ULONG_PTR completionKey;
     HOverlap* lpOverlapped = nullptr;
 
+    bool isClientDisconnect = false;
+
     while (m_isRunning)
     {
         BOOL ret = GetQueuedCompletionStatus(m_hIocp,
@@ -36,33 +39,33 @@ void HIocp::WorkerProcess()
                                              (LPOVERLAPPED*)&lpOverlapped,
                                              INFINITE);
 
-        UserSession* pSession = (UserSession*)completionKey;
+        HSession* pSession = (HSession*)completionKey;
+        isClientDisconnect = false;
 
         if (!lpOverlapped || !pSession)
             continue;
 
         if (ret == TRUE)
         {
-            if (lpOverlapped->rwFlag == RW_FLAG::RW_END)
-            {
-                H_NETWORK.m_sessionManager->DisConnect(pSession->socket);
-                continue;
-            }
-
-            if (dwTransfer == 0)
-            {
-                lpOverlapped->rwFlag = RW_FLAG::RW_END;
-                PostQueuedCompletionStatus(m_hIocp, 0, completionKey, (LPOVERLAPPED)lpOverlapped);
-                continue;
-            }
+            if (lpOverlapped->rwFlag == RW_FLAG::RW_END || dwTransfer == 0)
+                isClientDisconnect = true;
             else
-            {
                 pSession->Dispatch(dwTransfer, lpOverlapped);
-            }
         }
         else
         {
-            H_NETWORK.PrintSockError();
+            isClientDisconnect = true;
         }
+
+        if (isClientDisconnect)
+            H_NETWORK.m_sessionManager->DisConnect(pSession->socket);
+
+
+        if (lpOverlapped)
+        {
+            delete lpOverlapped;
+            lpOverlapped = nullptr;
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 }

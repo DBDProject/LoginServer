@@ -7,7 +7,7 @@ void HNetwork::InitWinSock()
 
     if (ret != 0)
     {
-        PrintSockError();
+        PrintSockError(WSAGetLastError());
         exit(1);
     }
 }
@@ -16,18 +16,18 @@ void HNetwork::Init()
 {
     m_sessionManager = std::make_unique<HSessionManager>();
     InitWinSock();
+    m_iocp.Init();
 }
 
 void HNetwork::Release()
 {
     m_sessionManager.reset();
+    m_iocp.Release();
     WSACleanup();
 }
 
-bool HNetwork::HasSockError()
+bool HNetwork::HasSockError(int errorCode)
 {
-    int errorCode = WSAGetLastError();
-
     switch (errorCode)
     {
     case WSAEWOULDBLOCK:
@@ -39,13 +39,12 @@ bool HNetwork::HasSockError()
         break;
     }
 
-    PrintSockError();
+    PrintSockError(errorCode);
     return true;
 }
 
-void HNetwork::PrintSockError()
+void HNetwork::PrintSockError(int errorCode)
 {
-    int    errorCode = WSAGetLastError();
     LPVOID lpMsgBuffer;
     FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
                    NULL,
@@ -72,12 +71,12 @@ void HNetwork::CreateServer(int port)
     int ret     = bind(m_serverSocket, (sockaddr*)&sa, namelen);
 
     if (ret < 0)
-        PrintSockError();
+        PRINT_SOCKET_ERROR()
 
     ret = listen(m_serverSocket, SOMAXCONN);
 
     if (ret < 0)
-        PrintSockError();
+        PRINT_SOCKET_ERROR()
 
     u_long iNonSocket = TRUE;
     int    iMode      = ioctlsocket(m_serverSocket, FIONBIO, &iNonSocket);
@@ -132,12 +131,15 @@ bool HNetwork::AcceptClient()
 
     if (clientSock == INVALID_SOCKET)
     {
-        if (HasSockError())
+        if (HasSockError(WSAGetLastError()))
             return false;
     }
     else
     {
         m_sessionManager->Connect(clientSock, addr);
+        HSession* pSession = m_sessionManager->GetSession(clientSock);
+        CreateIoCompletionPort((HANDLE)clientSock, m_iocp.GetIocpHandle(), (ULONG_PTR)pSession, 0);
+        pSession->AsyncRecv();
     }
 
     return true;

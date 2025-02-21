@@ -141,6 +141,7 @@
     <ClCompile Include="DBDLoginServer.cpp" />
     <ClCompile Include="HIocp.cpp" />
     <ClCompile Include="HNetwork.cpp" />
+    <ClCompile Include="HSession.cpp" />
     <ClCompile Include="HSessionManager.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="pch.cpp">
@@ -155,6 +156,7 @@
     <ClInclude Include="HIocp.h" />
     <ClInclude Include="HNetwork.h" />
     <ClInclude Include="HOverlap.h" />
+    <ClInclude Include="HSession.h" />
     <ClInclude Include="HSessionManager.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="HTimer.h" />
