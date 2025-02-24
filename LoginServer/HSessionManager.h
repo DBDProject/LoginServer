@@ -22,7 +22,7 @@ public:
     void Broadcast(const char* data, int size);
     void Broadcast(const char* data, int size, SOCKET socket);
 
-    void DelUser();
-
+    void      DelUser();
+    void      PrintUserList() const;
     HSession* GetSession(SOCKET socket);
 };

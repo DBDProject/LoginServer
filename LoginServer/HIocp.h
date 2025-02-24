@@ -9,8 +9,6 @@ private:
     HANDLE      m_hIocp;
     HThreadPool m_threadPool;
 
-    bool m_isRunning = true;
-
     std::mutex m_addPacketMutex;
 
 public:

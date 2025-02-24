@@ -90,6 +90,17 @@ void HSessionManager::DelUser()
     }
 }
 
+void HSessionManager::PrintUserList() const
+{
+    for (auto& [socket, userSession] : m_hSessions)
+    {
+        LOG_INFO("Socket : {} | IP : {} | Port : {}\n",
+                 socket,
+                 inet_ntoa(userSession.address.sin_addr),
+                 ntohs(userSession.address.sin_port))
+    }
+}
+
 HSession* HSessionManager::GetSession(SOCKET socket)
 {
     std::lock_guard<std::mutex> lock(m_mutex);

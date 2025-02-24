@@ -5,6 +5,7 @@
 #include <WinSock2.h>
 #include <WS2tcpip.h>
 #include <windows.h>
+#include <iostream>
 #include <string>
 #include <vector>
 #include <map>

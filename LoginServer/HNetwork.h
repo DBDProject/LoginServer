@@ -24,6 +24,8 @@ private:
 public:
     std::unique_ptr<HSessionManager> m_sessionManager;
 
+    inline static bool m_isRunning = true;
+
 private:
     void InitWinSock();
 
@@ -36,6 +38,7 @@ public:
 
     bool AcceptClient();
     void CreateServer(int port);
+    void StopServer();
 
     void AddPacket(SOCKET socket, HPACKET* packet);
     void ProcessPactket();

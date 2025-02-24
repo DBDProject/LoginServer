@@ -21,8 +21,8 @@ void HNetwork::Init()
 
 void HNetwork::Release()
 {
-    m_sessionManager.reset();
     m_iocp.Release();
+    m_sessionManager.reset();
     WSACleanup();
 }
 
@@ -94,6 +94,16 @@ void HNetwork::CreateServer(int port)
     LOG_INFO("===============================================\n")
     LOG_INFO("Server created | IP : {} Port : {}\n", GetServerIP(), port)
     LOG_INFO("===============================================\n")
+}
+
+void HNetwork::StopServer()
+{
+    m_isRunning = false;
+
+    for (int i = 0; i < MAX_THREAD; i++)
+        PostQueuedCompletionStatus(m_iocp.GetIocpHandle(), 0, 0, nullptr);
+
+    LOG_INFO("Server stopped\n")
 }
 
 void HNetwork::AddPacket(SOCKET socket, HPACKET* packet)
@@ -170,10 +180,8 @@ void HNetwork::ProcessPactket()
         switch (packet->ph.type)
         {
         case PACKET_CHAT_MSG:
-            LOG_INFO("Chat msg : {}\n", packet->msg)
-            H_NETWORK.m_sessionManager->Broadcast(reinterpret_cast<char*>(packet),
-                                                  packet->ph.len,
-                                                  socket);
+            LOG_INFO("[{}]: {}\n", socket, packet->msg)
+            H_NETWORK.m_sessionManager->Broadcast(reinterpret_cast<char*>(packet), packet->ph.len);
         }
     }
 }

@@ -1,5 +1,4 @@
 #pragma once
-#define MAX_MSG_SIZE 1024
 
 enum TPACKET_TYPE
 {
@@ -54,6 +53,8 @@ enum TPACKET_TYPE
     PACKET_ZONE_TARGET_REQ,    // 존 타켓 위치 요청
     PACKET_ZONE_TARGET_ACK,    // 존 타켓 위치 응답
 };
+
+#define MAX_MSG_SIZE 1024
 
 #pragma pack(push, 1)
 

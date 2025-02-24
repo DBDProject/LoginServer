@@ -17,7 +17,6 @@ void HIocp::Init()
 
 void HIocp::Release()
 {
-    m_isRunning = false;
     m_threadPool.Release();
     CloseHandle(m_hIocp);
     LOG_INFO("Iocp release\n")
@@ -32,7 +31,7 @@ void HIocp::WorkerProcess()
     bool isPacketProcess = false;
     bool isDisconnected  = false;
 
-    while (m_isRunning)
+    while (HNetwork::m_isRunning)
     {
         BOOL ret = GetQueuedCompletionStatus(m_hIocp,
                                              &dwTransfer,

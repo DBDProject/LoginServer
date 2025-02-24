@@ -139,6 +139,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DBDLoginServer.cpp" />
+    <ClCompile Include="HCommand.cpp" />
     <ClCompile Include="HIocp.cpp" />
     <ClCompile Include="HNetwork.cpp" />
     <ClCompile Include="HSession.cpp" />
@@ -152,6 +153,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DBDLoginServer.h" />
+    <ClInclude Include="HCommand.h" />
     <ClInclude Include="HConvention.h" />
     <ClInclude Include="HProtocol.h" />
     <ClInclude Include="HIocp.h" />

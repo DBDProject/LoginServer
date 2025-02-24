@@ -1,6 +1,7 @@
 #pragma once
 
 #include "HNetwork.h"
+#include "HCommand.h"
 #include "HTimer.h"
 
 class DBDLoginServer : public HConvention
@@ -19,6 +20,7 @@ public:
     DBDLoginServer()  = default;
     ~DBDLoginServer() = default;
 
+    void InputProcess();
     void SetServerPort(int port);
     void Run();
 };
