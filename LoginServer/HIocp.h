@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "HOverlap.h"
 #include "HThreadPool.h"
+#include "HSession.h"
 
 class HIocp : public HConvention
 {
@@ -11,6 +12,8 @@ private:
 
     bool m_isRunning = true;
 
+    std::mutex m_addPacketMutex;
+
 public:
     HIocp()  = default;
     ~HIocp() = default;
@@ -19,6 +22,8 @@ public:
     void Release() override;
 
     void WorkerProcess();
+    void ProcessAsyncRecv(HSession* pSession, HOverlap* overlap, DWORD transfer);
+    void ProcessAsyncSend(HSession* pSession, HOverlap* overlap, DWORD transfer);
 
     HANDLE GetIocpHandle() { return m_hIocp; }
 };

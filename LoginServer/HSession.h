@@ -1,14 +1,17 @@
 #pragma once
 
-// make a documentation
+#include "pch.h"
+
 struct HSession
 {
     sockaddr_in address;
     SOCKET      socket;
 
+    char readPacket[MAX_BUFFER_SIZE];
+    char sendPacket[MAX_BUFFER_SIZE];
+
     HSession();
 
-    void Dispatch(DWORD transfer, HOverlap* overlap);
     void SendPacket(const char* data, int size);
     void RecvPacket();
     void AsyncRecv();

@@ -19,18 +19,17 @@ enum RW_FLAG
 
 struct HOverlap : public OVERLAPPED
 {
-    WSABUF  wsabuf;
-    RW_MODE rwMode;
-    RW_FLAG rwFlag;
-    char    buffer[MAX_BUFFER_SIZE];
-    int     rwSize;
-    int     rwCount;
-    int     rwOffset;
+    WSABUF           wsabuf;
+    RW_MODE          rwMode;
+    RW_FLAG          rwFlag;
+    char             buffer[MAX_BUFFER_SIZE];
+    std::atomic<int> rwReadPos;
 
     HOverlap()
     {
         ZeroMemory(this, sizeof(*this));
         wsabuf.buf = buffer;
         wsabuf.len = MAX_BUFFER_SIZE;
+        rwReadPos  = 0;
     }
 };

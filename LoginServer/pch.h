@@ -14,6 +14,7 @@
 #include <functional>
 #include <condition_variable>
 #include <chrono>
+#include <atomic>
 #include <memory>
 
 #pragma comment(lib, "ws2_32.lib")
@@ -42,5 +43,6 @@
 #include "HConvention.h"
 #include "HSingleton.h"
 #include "HOverlap.h"
+#include "HProtocol.h"
 
 using namespace std::chrono;

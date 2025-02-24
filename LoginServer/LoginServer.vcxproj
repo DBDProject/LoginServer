@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClInclude Include="DBDLoginServer.h" />
     <ClInclude Include="HConvention.h" />
+    <ClInclude Include="HProtocol.h" />
     <ClInclude Include="HIocp.h" />
     <ClInclude Include="HNetwork.h" />
     <ClInclude Include="HOverlap.h" />

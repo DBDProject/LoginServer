@@ -90,6 +90,12 @@ void HNetwork::CreateServer(int port)
     LOG_INFO("===============================================\n")
 }
 
+void HNetwork::AddPacket(HPACKET* packet)
+{
+    if (packet)
+        m_packetQueue.push(packet);
+}
+
 std::string HNetwork::GetServerIP()
 {
     char        hostname[256];
@@ -144,7 +150,17 @@ bool HNetwork::AcceptClient()
     return true;
 }
 
-bool HNetwork::ProcessPactket()
+void HNetwork::ProcessPactket()
 {
-    return true;
+    while (!m_packetQueue.empty())
+    {
+        HPACKET* packet = m_packetQueue.front();
+        m_packetQueue.pop();
+
+        switch (packet->ph.type)
+        {
+        case PACKET_CHAT_MSG:
+            LOG_INFO("Chat msg : {}\n", packet->msg)
+        }
+    }
 }

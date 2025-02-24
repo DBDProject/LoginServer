@@ -35,8 +35,7 @@ void DBDLoginServer::Run()
         if (!H_NETWORK.AcceptClient())
             break;
 
-        if (!H_NETWORK.ProcessPactket())
-            break;
+        H_NETWORK.ProcessPactket();
     }
 
     Release();

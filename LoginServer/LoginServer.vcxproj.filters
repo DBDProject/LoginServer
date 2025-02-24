@@ -73,6 +73,9 @@
     <ClInclude Include="HSession.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="HProtocol.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.clang-format">

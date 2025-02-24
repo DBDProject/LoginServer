@@ -14,6 +14,8 @@ private:
     SOCKET  m_serverSocket;
     HIocp   m_iocp;
 
+    std::queue<HPACKET*> m_packetQueue;
+
     H_SINGLETON_DECLARE(HNetwork)
 
 public:
@@ -28,10 +30,11 @@ public:
 
     bool HasSockError(int errorCode);
     bool AcceptClient();
-    bool ProcessPactket();
 
     void PrintSockError(int errorCode);
     void CreateServer(int port);
+    void AddPacket(HPACKET* packet);
+    void ProcessPactket();
 
     std::string GetServerIP();
 };
