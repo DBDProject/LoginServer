@@ -30,8 +30,8 @@ void HThreadPool::Release()
     for (size_t i = 0; i < m_numThread; i++)
     {
         m_workers[i].join();
+        LOG_INFO("Thread[{}] terminated\n", i);
     }
-    LOG_INFO("Thread terminated\n");
 }
 
 void HThreadPool::SetTask(std::function<void()> task)

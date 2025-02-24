@@ -215,3 +215,25 @@ bool HNetwork::DeleteOverlap(HOverlap* overlap)
     }
     return false;
 }
+
+void HNetwork::PrintOverlapList()
+{
+    LOG_INFO("Overlap List\n")
+    for (auto& overlap : m_overlapSet)
+    {
+        switch (overlap->rwFlag)
+        {
+        case RW_FLAG::RECV:
+            LOG_INFO("Overlap[RD] / read : {}\n", overlap->readPos.load())
+            break;
+
+        case RW_FLAG::SEND:
+            LOG_INFO("Overlap[WR] / write : {}\n", overlap->writePos.load())
+            break;
+
+        case RW_FLAG::END:
+            LOG_INFO("Overlap[END]\n")
+            break;
+        }
+    }
+}

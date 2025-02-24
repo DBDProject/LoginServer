@@ -53,14 +53,14 @@ void HIocp::WorkerProcess()
         {
             switch (lpOverlapped->rwFlag)
             {
-            case RW_FLAG::RW_END:
+            case RW_FLAG::END:
                 isDisconnected = true;
                 break;
-            case RW_FLAG::RW_RECV:
+            case RW_FLAG::RECV:
                 ProcessAsyncRecv(pSession, lpOverlapped, dwTransfer);
                 break;
 
-            case RW_FLAG::RW_SEND:
+            case RW_FLAG::SEND:
                 ProcessAsyncSend(pSession, lpOverlapped, dwTransfer);
                 break;
             }

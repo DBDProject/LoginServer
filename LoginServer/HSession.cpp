@@ -20,7 +20,7 @@ void HSession::AsyncSend(const char* data, int size)
     HOverlap* overlap = H_NETWORK.AddOverlap();
     memcpy(overlap->buffer, data, size);
 
-    overlap->rwFlag     = RW_FLAG::RW_SEND;
+    overlap->rwFlag     = RW_FLAG::SEND;
     overlap->wsabuf.buf = overlap->buffer;
     overlap->wsabuf.len = size;
     DWORD flags         = 0;
@@ -42,7 +42,7 @@ void HSession::AsyncSend(const char* data, int size)
 void HSession::AsyncRecv()
 {
     HOverlap* overlap = H_NETWORK.AddOverlap();
-    overlap->rwFlag   = RW_RECV;
+    overlap->rwFlag   = RW_FLAG::RECV;
 
     DWORD flags = 0;
     int   ret   = WSARecv(socket, &overlap->wsabuf, 1, nullptr, &flags, overlap, nullptr);

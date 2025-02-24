@@ -45,6 +45,7 @@ public:
 
     HOverlap* AddOverlap();
     bool      DeleteOverlap(HOverlap* overlap);
+    void      PrintOverlapList();
 
     std::string GetServerIP();
 };

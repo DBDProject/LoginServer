@@ -5,10 +5,10 @@
 
 enum RW_FLAG
 {
-    RW_NONE,
-    RW_RECV,
-    RW_SEND,
-    RW_END
+    NONE,
+    RECV,
+    SEND,
+    END
 };
 
 struct HOverlap : public OVERLAPPED

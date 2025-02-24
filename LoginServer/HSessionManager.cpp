@@ -92,6 +92,7 @@ void HSessionManager::DelUser()
 
 void HSessionManager::PrintUserList() const
 {
+    LOG_INFO("User List\n")
     for (auto& [socket, userSession] : m_hSessions)
     {
         LOG_INFO("Socket : {} | IP : {} | Port : {}\n",
