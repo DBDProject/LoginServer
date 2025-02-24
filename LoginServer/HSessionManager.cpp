@@ -3,21 +3,21 @@
 
 HSessionManager::~HSessionManager()
 {
-    for (auto& [socket, HSession] : m_hSessions)
+    for (auto& [socket, userSession] : m_hSessions)
     {
-        closesocket(HSession.socket);
+        closesocket(userSession.socket);
     }
 }
 
 void HSessionManager::Connect(SOCKET socket, const sockaddr_in& address)
 {
-    HSession HSession;
-    HSession.address = address;
-    HSession.socket  = socket;
+    HSession userSession;
+    userSession.address = address;
+    userSession.socket  = socket;
 
     {
         std::lock_guard<std::mutex> lock(m_mutex);
-        m_hSessions[socket] = HSession;
+        m_hSessions[socket] = userSession;
     }
 
     LOG_INFO("===============================================\n")

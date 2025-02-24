@@ -125,9 +125,8 @@ std::string HNetwork::GetServerIP()
 bool HNetwork::AcceptClient()
 {
     SOCKADDR_IN addr;
-    int         addrlen     = sizeof(addr);
-    int         iMsgCounter = 0;
-    SOCKET      clientSock  = accept(m_serverSocket, (sockaddr*)&addr, &addrlen);
+    int         addrlen    = sizeof(addr);
+    SOCKET      clientSock = accept(m_serverSocket, (sockaddr*)&addr, &addrlen);
 
     if (clientSock == INVALID_SOCKET)
     {

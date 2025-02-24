@@ -70,7 +70,9 @@
     <ClInclude Include="HOverlap.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="HSession.h" />
+    <ClInclude Include="HSession.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.clang-format">
