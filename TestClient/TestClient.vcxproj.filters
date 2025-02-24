@@ -15,48 +15,39 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Sample.cpp">
+    <ClCompile Include="TNetClient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TDebugString.cpp">
+    <ClCompile Include="TNetServer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TRecver.cpp">
+    <ClCompile Include="TNetwork.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TSender.cpp">
+    <ClCompile Include="TSession.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TServerObj.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TSynchronize.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TThread.cpp">
+    <ClCompile Include="net_Client_Echo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Sample.h">
+    <ClInclude Include="TNetClient.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="TDebugString.h">
+    <ClInclude Include="TNetServer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="TRecver.h">
+    <ClInclude Include="TNetStd.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="TSender.h">
+    <ClInclude Include="TNetwork.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="TServerObj.h">
+    <ClInclude Include="TProtocol.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="TSynchronize.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TThread.h">
+    <ClInclude Include="TSession.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

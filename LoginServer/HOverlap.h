@@ -3,12 +3,6 @@
 
 #define MAX_BUFFER_SIZE 1024
 
-enum RW_MODE
-{
-    RW_READ,
-    RW_WRITE,
-};
-
 enum RW_FLAG
 {
     RW_NONE,
@@ -20,16 +14,17 @@ enum RW_FLAG
 struct HOverlap : public OVERLAPPED
 {
     WSABUF           wsabuf;
-    RW_MODE          rwMode;
     RW_FLAG          rwFlag;
     char             buffer[MAX_BUFFER_SIZE];
-    std::atomic<int> rwReadPos;
+    std::atomic<int> readPos;
+    std::atomic<int> writePos;
 
     HOverlap()
     {
         ZeroMemory(this, sizeof(*this));
         wsabuf.buf = buffer;
         wsabuf.len = MAX_BUFFER_SIZE;
-        rwReadPos  = 0;
+        readPos    = 0;
+        writePos   = 0;
     }
 };

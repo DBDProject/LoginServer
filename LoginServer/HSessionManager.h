@@ -20,6 +20,7 @@ public:
     void DisConnect(SOCKET socket);
 
     void Broadcast(const char* data, int size);
+    void Broadcast(const char* data, int size, SOCKET socket);
 
     void DelUser();
 

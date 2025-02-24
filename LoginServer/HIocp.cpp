@@ -54,7 +54,8 @@ void HIocp::WorkerProcess()
         {
             switch (lpOverlapped->rwFlag)
             {
-            case RW_END:
+            case RW_FLAG::RW_END:
+                isDisconnected = true;
                 break;
             case RW_FLAG::RW_RECV:
                 ProcessAsyncRecv(pSession, lpOverlapped, dwTransfer);
@@ -73,14 +74,7 @@ void HIocp::WorkerProcess()
         if (isDisconnected)
         {
             H_NETWORK.m_sessionManager->DisConnect(pSession->socket);
-            if (lpOverlapped)
-            {
-                lpOverlapped = nullptr;
-                delete lpOverlapped;
-#ifdef _DEBUG
-                LOG_WARNING("Delete overlapped\n");
-#endif
-            }
+            H_NETWORK.DeleteOverlap(lpOverlapped);
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -89,37 +83,46 @@ void HIocp::WorkerProcess()
 
 void HIocp::ProcessAsyncRecv(HSession* pSession, HOverlap* overlap, DWORD transfer)
 {
-    if (!overlap)
+    if (!overlap || !pSession)
         return;
 
     memcpy(pSession->readPacket, overlap->buffer, transfer);
-    overlap->rwReadPos += transfer;
+    overlap->readPos += transfer;
 
-    if (overlap->rwReadPos >= PACKET_HEADER_SIZE)
+    if (overlap->readPos >= PACKET_HEADER_SIZE)
     {
         HPACKET* packet = (HPACKET*)pSession->readPacket;
 
-        if (packet->ph.len >= overlap->rwReadPos)
+        if (packet->ph.len >= overlap->readPos)
         {
             pSession->readPacket[packet->ph.len] = '\0';
             {
                 std::lock_guard<std::mutex> lock(m_addPacketMutex);
-                H_NETWORK.AddPacket(packet);
+                H_NETWORK.AddPacket(pSession->socket, packet);
             }
 
-            if (overlap)
-            {
-#ifdef _DEBUG
-                LOG_WARNING("Delete overlapped\n");
-#endif
-
-                delete overlap;
-                overlap = nullptr;
-            }
-
+            H_NETWORK.DeleteOverlap(overlap);
             pSession->AsyncRecv();
         }
     }
 }
 
-void HIocp::ProcessAsyncSend(HSession* pSession, HOverlap* overlap, DWORD transfer) {}
+void HIocp::ProcessAsyncSend(HSession* pSession, HOverlap* overlap, DWORD transfer)
+{
+    if (!overlap || !pSession)
+        return;
+
+    memcpy(pSession->sendPacket, overlap->buffer, transfer);
+    overlap->writePos += transfer;
+
+    if (overlap->writePos >= PACKET_HEADER_SIZE)
+    {
+        HPACKET* packet = (HPACKET*)pSession->sendPacket;
+
+        if (packet->ph.len >= overlap->writePos)
+        {
+            pSession->sendPacket[transfer] = '\0';
+            H_NETWORK.DeleteOverlap(overlap);
+        }
+    }
+}

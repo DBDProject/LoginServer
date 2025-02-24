@@ -39,7 +39,6 @@ bool HNetwork::HasSockError(int errorCode)
         break;
     }
 
-    PrintSockError(errorCode);
     return true;
 }
 
@@ -69,14 +68,21 @@ void HNetwork::CreateServer(int port)
 
     int namelen = sizeof(sa);
     int ret     = bind(m_serverSocket, (sockaddr*)&sa, namelen);
+    int errorCode;
 
     if (ret < 0)
-        PRINT_SOCKET_ERROR()
+    {
+        errorCode = WSAGetLastError();
+        H_NETWORK.PrintSockError(errorCode);
+    }
 
     ret = listen(m_serverSocket, SOMAXCONN);
 
     if (ret < 0)
-        PRINT_SOCKET_ERROR()
+    {
+        errorCode = WSAGetLastError();
+        H_NETWORK.PrintSockError(errorCode);
+    }
 
     u_long iNonSocket = TRUE;
     int    iMode      = ioctlsocket(m_serverSocket, FIONBIO, &iNonSocket);
@@ -90,10 +96,10 @@ void HNetwork::CreateServer(int port)
     LOG_INFO("===============================================\n")
 }
 
-void HNetwork::AddPacket(HPACKET* packet)
+void HNetwork::AddPacket(SOCKET socket, HPACKET* packet)
 {
     if (packet)
-        m_packetQueue.push(packet);
+        m_packetQueue.push(std::make_pair(socket, packet));
 }
 
 std::string HNetwork::GetServerIP()
@@ -136,8 +142,12 @@ bool HNetwork::AcceptClient()
 
     if (clientSock == INVALID_SOCKET)
     {
-        if (HasSockError(WSAGetLastError()))
+        int errorCode = WSAGetLastError();
+        if (HasSockError(errorCode))
+        {
+            PrintSockError(errorCode);
             return false;
+        }
     }
     else
     {
@@ -154,13 +164,46 @@ void HNetwork::ProcessPactket()
 {
     while (!m_packetQueue.empty())
     {
-        HPACKET* packet = m_packetQueue.front();
+        auto [socket, packet] = m_packetQueue.front();
         m_packetQueue.pop();
 
         switch (packet->ph.type)
         {
         case PACKET_CHAT_MSG:
             LOG_INFO("Chat msg : {}\n", packet->msg)
+            H_NETWORK.m_sessionManager->Broadcast(reinterpret_cast<char*>(packet),
+                                                  packet->ph.len,
+                                                  socket);
         }
     }
+}
+
+HOverlap* HNetwork::AddOverlap()
+{
+#ifdef DEBUG_PRINT
+    LOG_ERROR("AddOverlap\n")
+#endif
+    HOverlap* overlap = new HOverlap();
+    DWORD     flags   = 0;
+    {
+        std::lock_guard<std::mutex> lock(m_overlapMutex);
+        m_overlapSet.insert(overlap);
+    }
+    return overlap;
+}
+
+bool HNetwork::DeleteOverlap(HOverlap* overlap)
+{
+#ifdef DEBUG_PRINT
+    LOG_ERROR("AddOverlap\n")
+#endif
+
+    std::lock_guard<std::mutex> lock(m_overlapMutex);
+    if (m_overlapSet.contains(overlap))
+    {
+        m_overlapSet.erase(overlap);
+        delete overlap;
+        return true;
+    }
+    return false;
 }

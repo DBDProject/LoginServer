@@ -14,7 +14,10 @@ private:
     SOCKET  m_serverSocket;
     HIocp   m_iocp;
 
-    std::queue<HPACKET*> m_packetQueue;
+    std::queue<std::pair<SOCKET, HPACKET*>> m_packetQueue;
+    std::set<HOverlap*>                     m_overlapSet;
+
+    std::mutex m_overlapMutex;
 
     H_SINGLETON_DECLARE(HNetwork)
 
@@ -28,13 +31,17 @@ public:
     void Init() override;
     void Release() override;
 
-    bool HasSockError(int errorCode);
-    bool AcceptClient();
-
     void PrintSockError(int errorCode);
+    bool HasSockError(int errorCode);
+
+    bool AcceptClient();
     void CreateServer(int port);
-    void AddPacket(HPACKET* packet);
+
+    void AddPacket(SOCKET socket, HPACKET* packet);
     void ProcessPactket();
+
+    HOverlap* AddOverlap();
+    bool      DeleteOverlap(HOverlap* overlap);
 
     std::string GetServerIP();
 };

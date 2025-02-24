@@ -18,6 +18,21 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="net_Client_Echo.cpp" />
+    <ClCompile Include="TNetClient.cpp" />
+    <ClCompile Include="TNetServer.cpp" />
+    <ClCompile Include="TNetwork.cpp" />
+    <ClCompile Include="TSession.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="TNetClient.h" />
+    <ClInclude Include="TNetServer.h" />
+    <ClInclude Include="TNetStd.h" />
+    <ClInclude Include="TNetwork.h" />
+    <ClInclude Include="TProtocol.h" />
+    <ClInclude Include="TSession.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -131,24 +146,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="Sample.cpp" />
-    <ClCompile Include="TDebugString.cpp" />
-    <ClCompile Include="TRecver.cpp" />
-    <ClCompile Include="TSender.cpp" />
-    <ClCompile Include="TServerObj.cpp" />
-    <ClCompile Include="TSynchronize.cpp" />
-    <ClCompile Include="TThread.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Sample.h" />
-    <ClInclude Include="TDebugString.h" />
-    <ClInclude Include="TRecver.h" />
-    <ClInclude Include="TSender.h" />
-    <ClInclude Include="TServerObj.h" />
-    <ClInclude Include="TSynchronize.h" />
-    <ClInclude Include="TThread.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

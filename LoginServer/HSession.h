@@ -12,7 +12,6 @@ struct HSession
 
     HSession();
 
-    void SendPacket(const char* data, int size);
-    void RecvPacket();
+    void AsyncSend(const char* data, int size);
     void AsyncRecv();
 };

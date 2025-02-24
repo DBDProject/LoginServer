@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "HSession.h"
+#include "HNetwork.h"
 
 HSession::HSession()
 {
@@ -7,25 +8,53 @@ HSession::HSession()
     socket = INVALID_SOCKET;
 }
 
-void HSession::SendPacket(const char* data, int size)
+void HSession::AsyncSend(const char* data, int size)
 {
-    HOverlap* overlap   = new HOverlap();
-    overlap->rwMode     = RW_MODE::RW_WRITE;
+    if (size > MAX_BUFFER_SIZE)
+    {
+        LOG_ERROR("Error : Data size exceeds buffer limit")
+        return;
+    }
+
+
+    HOverlap* overlap = H_NETWORK.AddOverlap();
+    memcpy(overlap->buffer, data, size);
+
     overlap->rwFlag     = RW_FLAG::RW_SEND;
-    overlap->wsabuf.buf = const_cast<char*>(data);
+    overlap->wsabuf.buf = overlap->buffer;
     overlap->wsabuf.len = size;
     DWORD flags         = 0;
-    WSASend(socket, &overlap->wsabuf, 1, nullptr, flags, overlap, nullptr);
+
+    int ret = WSASend(socket, &overlap->wsabuf, 1, nullptr, flags, overlap, nullptr);
+
+    if (ret == SOCKET_ERROR)
+    {
+        int errorCode = WSAGetLastError();
+
+        if (H_NETWORK.HasSockError(errorCode))
+        {
+            H_NETWORK.PrintSockError(errorCode);
+            H_NETWORK.m_sessionManager->DisConnect(socket);
+        }
+    }
 }
 
 void HSession::AsyncRecv()
 {
-#ifdef _DEBUG
-    LOG_WARNING("Create overlapped\n");
-#endif
-    HOverlap* overlap = new HOverlap();
-    overlap->rwMode   = RW_MODE::RW_READ;
-    overlap->rwFlag   = RW_FLAG::RW_RECV;
-    DWORD flags       = 0;
-    WSARecv(socket, &overlap->wsabuf, 1, nullptr, &flags, overlap, nullptr);
+    HOverlap* overlap = H_NETWORK.AddOverlap();
+    overlap->rwFlag   = RW_RECV;
+
+    DWORD flags = 0;
+    int   ret   = WSARecv(socket, &overlap->wsabuf, 1, nullptr, &flags, overlap, nullptr);
+
+    if (ret == SOCKET_ERROR)
+    {
+        int errorCode = WSAGetLastError();
+
+        if (H_NETWORK.HasSockError(errorCode))
+        {
+            H_NETWORK.PrintSockError(errorCode);
+            H_NETWORK.m_sessionManager->DisConnect(socket);
+        }
+    }
 }
