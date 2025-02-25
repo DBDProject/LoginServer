@@ -111,13 +111,20 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)ThirdParty\fmt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)ThirdParty\fmt\include;$(SolutionDir)ThirdParty\protobuf\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PreBuildEvent>
+      <Command>copy /Y "$(SolutionDir)ThirdParty\google\protobuf\packet.pb.cc" "$(ProjectDir)"
+
+copy /Y "$(SolutionDir)ThirdParty\google\protobuf\packet.pb.h" "$(ProjectDir)"
+</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -145,6 +152,9 @@
     <ClCompile Include="HSession.cpp" />
     <ClCompile Include="HSessionManager.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Packet.pb.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
@@ -161,6 +171,7 @@
     <ClInclude Include="HOverlap.h" />
     <ClInclude Include="HSession.h" />
     <ClInclude Include="HSessionManager.h" />
+    <ClInclude Include="Packet.pb.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="HTimer.h" />
     <ClInclude Include="HSingleton.h" />

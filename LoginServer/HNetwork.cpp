@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "HNetwork.h"
+#include <google/protobuf/message.h>
 
 /**
  * @brief Initializes the Windows Socket API
@@ -130,8 +131,16 @@ void HNetwork::CreateServer(int port)
     int flag = 1;
     setsockopt(m_serverSocket, IPPROTO_TCP, TCP_NODELAY, (char*)&flag, sizeof(flag));
 
+    std::string internalIP = GetInternalServerIP();
+    std::string externalIP = GetExternalServerIP();
     LOG_INFO("===============================================\n");
-    LOG_INFO("Server created | IP : {} Port : {}\n", GetServerIP(), port);
+    LOG_INFO("Server created\n \
+        Internal IP : {}\n \
+        External IP : {}\n \
+        Port : {}\n",
+             internalIP,
+             externalIP,
+             port);
     LOG_INFO("===============================================\n");
 }
 
@@ -172,7 +181,7 @@ void HNetwork::AddPacket(SOCKET socket, HPACKET* packet)
  *
  * Retrieves the local hostname and resolves it to an IPv4 address.
  */
-std::string HNetwork::GetServerIP()
+std::string HNetwork::GetInternalServerIP()
 {
     char        hostname[256];
     char        ipStr[INET_ADDRSTRLEN];
@@ -201,6 +210,115 @@ std::string HNetwork::GetServerIP()
     inet_ntop(AF_INET, &addr->sin_addr, ipStr, sizeof(ipStr));
     ip = ipStr;
 
+    return ip;
+}
+
+std::string HNetwork::GetExternalServerIP()
+{
+    const char* API_HOSTS[] = {"api.ipify.org", "ifconfig.me", "icanhazip.com", "api.myip.com"};
+
+    std::string ip;
+    SOCKET      sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if (sock == INVALID_SOCKET)
+    {
+        LOG_ERROR("Failed to create socket for external IP lookup\n");
+        return ip;
+    }
+
+    // Set timeout to avoid hanging
+    DWORD timeout = 5000;  // 5 seconds
+    setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout, sizeof(timeout));
+    setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO, (char*)&timeout, sizeof(timeout));
+
+    // Try each API host until one succeeds
+    for (const char* host : API_HOSTS)
+    {
+        addrinfo hints    = {};
+        hints.ai_family   = AF_INET;
+        hints.ai_socktype = SOCK_STREAM;
+        hints.ai_protocol = IPPROTO_TCP;
+
+        addrinfo* result = nullptr;
+        if (getaddrinfo(host, "80", &hints, &result) != 0)
+        {
+            LOG_ERROR("Failed to resolve host: {}\n", host);
+            continue;
+        }
+
+        // Try to connect
+        if (connect(sock, result->ai_addr, (int)result->ai_addrlen) == SOCKET_ERROR)
+        {
+            freeaddrinfo(result);
+            LOG_ERROR("Failed to connect to: {}\n", host);
+            continue;
+        }
+
+        // Prepare HTTP request
+        std::string request = "GET / HTTP/1.1\r\n"
+                              "Host: " +
+                              std::string(host) +
+                              "\r\n"
+                              "User-Agent: ExternalIPFetcher/1.0\r\n"
+                              "Connection: close\r\n\r\n";
+
+        // Send request
+        if (send(sock, request.c_str(), (int)request.length(), 0) == SOCKET_ERROR)
+        {
+            freeaddrinfo(result);
+            LOG_ERROR("Failed to send request to: {}\n", host);
+            continue;
+        }
+
+        freeaddrinfo(result);
+
+        // Receive response
+        char buffer[1024];
+        ZeroMemory(buffer, sizeof(buffer));
+        int bytesReceived = recv(sock, buffer, sizeof(buffer) - 1, 0);
+
+        if (bytesReceived > 0)
+        {
+            // Extract IP from response - for simple APIs like ipify.org, the response body is just the
+            // IP
+            std::string response(buffer, bytesReceived);
+
+            // Find the IP in the response
+            // First try to find the end of HTTP headers
+            size_t headerEnd = response.find("\r\n\r\n");
+            if (headerEnd != std::string::npos)
+            {
+                std::string body = response.substr(headerEnd + 4);
+
+                // Simple regex-like pattern matching for IPv4 address
+                std::regex  ipv4Pattern("(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})");
+                std::smatch match;
+
+                if (std::regex_search(body, match, ipv4Pattern) && !match.empty())
+                {
+                    ip = match[0];
+                    break;
+                }
+            }
+
+            // Fallback: try to find IP anywhere in the response
+            std::regex  ipv4Pattern("(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})");
+            std::smatch match;
+
+            if (std::regex_search(response, match, ipv4Pattern) && !match.empty())
+            {
+                ip = match[0];
+                break;
+            }
+
+            LOG_ERROR("Could not find IP in response from: {}\n", host);
+        }
+        else
+        {
+            LOG_ERROR("Failed to receive response from: {}\n", host);
+        }
+    }
+
+    closesocket(sock);
     return ip;
 }
 
@@ -248,14 +366,20 @@ void HNetwork::ProcessPacket()
 {
     while (!m_packetQueue.empty())
     {
-        auto [socket, packet] = m_packetQueue.front();
+        auto [socket, packet] = std::move(m_packetQueue.front());
         m_packetQueue.pop();
 
         switch (packet->ph.type)
         {
-        case PACKET_CHAT_MSG:
+        case TPACKET_TYPE::PACKET_CHAT_MSG:
             LOG_INFO("[{}]: {}\n", socket, packet->msg);
             H_NETWORK.m_sessionManager->Broadcast(reinterpret_cast<char*>(packet), packet->ph.len);
+        }
+
+        if (packet)
+        {
+            LOG_ERROR("Packet delete\n");
+            delete packet;
         }
     }
 }
@@ -269,9 +393,6 @@ void HNetwork::ProcessPacket()
  */
 HOverlap* HNetwork::AddOverlap()
 {
-#ifdef DEBUG_PRINT
-    LOG_ERROR("AddOverlap\n");
-#endif
     HOverlap* overlap = new HOverlap();
     DWORD     flags   = 0;
     {
@@ -291,10 +412,6 @@ HOverlap* HNetwork::AddOverlap()
  */
 bool HNetwork::DeleteOverlap(HOverlap* overlap)
 {
-#ifdef DEBUG_PRINT
-    LOG_ERROR("AddOverlap\n");
-#endif
-
     std::lock_guard<std::mutex> lock(m_overlapMutex);
     if (m_overlapSet.contains(overlap))
     {

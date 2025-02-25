@@ -1,6 +1,6 @@
 #pragma once
 
-enum TPACKET_TYPE
+enum class TPACKET_TYPE : short
 {
     PACKET_VERIFICATION_REQ = 1,
     PACKET_VERIFICATION_ACK,
@@ -48,22 +48,23 @@ enum TPACKET_TYPE
     PACKET_ZONE_ENTRY_REQ = 6000,  // 게임존 입장 요청
     PACKET_ZONE_ENTRY_ACK,         // 게임 존 입장 응답
     PACKET_ZONE_NEW_PLAYER,        // 게임 존 입장 케릭터 정보 전송
-    PACKET_ZONE_PLAYERS_INFO,  // 게임 존에 입장한 유저들의 플레이 케릭터 정보 전송
-    PACKET_ZONE_USER_INFO,     // 게임존 유저리스트 정보(플레이어+기타(옵저버 등))
-    PACKET_ZONE_TARGET_REQ,    // 존 타켓 위치 요청
-    PACKET_ZONE_TARGET_ACK,    // 존 타켓 위치 응답
+    PACKET_ZONE_PLAYERS_INFO,      // 게임 존에 입장한 유저들의 플레이 케릭터 정보 전송
+    PACKET_ZONE_USER_INFO,         // 게임존 유저리스트 정보(플레이어+기타(옵저버 등))
+    PACKET_ZONE_TARGET_REQ,        // 존 타켓 위치 요청
+    PACKET_ZONE_TARGET_ACK,        // 존 타켓 위치 응답
 };
 
-#define MAX_MSG_SIZE 1024
+#define PACKET_HEADER_SIZE 8
+#define MAX_MSG_SIZE       1024
+#define MAX_BUFFER_SIZE    MAX_MSG_SIZE + PACKET_HEADER_SIZE
 
 #pragma pack(push, 1)
 
 typedef struct
 {
-    short iotype;  // 패킷 입출력 종류
-    short len;     // msg 바이트 크기
-    short type;    // 어떤 패킷이다.
-    short time;    // 패킷 전송 시간
+    int          len;   // msg 바이트 크기
+    TPACKET_TYPE type;  // 어떤 패킷이다.
+    short        time;  // 패킷 전송 시간
 } PACKET_HEADER;
 
 typedef struct
@@ -73,6 +74,3 @@ typedef struct
 } HPACKET;
 
 #pragma pack(pop)
-
-#define PACKET_HEADER_SIZE 8
-#define PACKET_SIZE        (PACKET_HEADER_SIZE + MAX_MSG_SIZE)

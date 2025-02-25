@@ -1,6 +1,7 @@
 #pragma once
 #include "pch.h"
 #include "HThreadPool.h"
+#include "HOverlap.h"
 #include "HSession.h"
 
 class HIocp : public HConvention

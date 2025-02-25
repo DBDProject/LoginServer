@@ -13,7 +13,7 @@ void HCommand::InitCommand()
 
 void HCommand::ProcessCommand(const std::string& command)
 {
-    if (command.size() <= 0 && command[0] != '/')
+    if (command.size() <= 0 || command[0] != '/')
         return;
 
     std::string cmd = std::move(command.substr(1, command.size()));
@@ -60,7 +60,7 @@ void HCommand::CommandSay(const std::string& command)
 
     HPACKET packet;
     packet.ph.len  = PACKET_HEADER_SIZE + msg.size() * sizeof(char);
-    packet.ph.type = PACKET_CHAT_MSG;
+    packet.ph.type = TPACKET_TYPE::PACKET_CHAT_MSG;
     strcpy_s(packet.msg, msg.c_str());
     H_NETWORK.m_sessionManager->Broadcast(reinterpret_cast<char*>(&packet), packet.ph.len);
 }

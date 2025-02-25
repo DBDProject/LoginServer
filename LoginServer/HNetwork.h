@@ -1,8 +1,8 @@
 #pragma once
 
 #include "pch.h"
-#include "HSingleton.h"
 #include "HSessionManager.h"
+#include "HOverlap.h"
 #include "HIocp.h"
 
 #define H_NETWORK HNetwork::GetInstance()
@@ -47,5 +47,47 @@ public:
     bool      DeleteOverlap(HOverlap* overlap);
     void      PrintOverlapList();
 
-    std::string GetServerIP();
+    std::string GetInternalServerIP();
+    std::string GetExternalServerIP();
+
+    template <class T>
+    static void SerializePacket(const TPACKET_TYPE packetType, const T& inSerializedData,
+                                HPACKET& outPacket);
+    template <class T>
+    static void DeserializePacket(const HPACKET& inPacket, T& outDeserializedData);
 };
+
+template <class T>
+inline void HNetwork::SerializePacket(const TPACKET_TYPE packetType, const T& inSerializedData,
+                                      HPACKET& outPacket)
+{
+    std::string serialized(inSerializedData.ByteSizeLong(), '\0');
+    if (!inSerializedData.SerializeToString(&serialized))
+    {
+        LOG_ERROR("Failed to serialize packet\n");
+        return;
+    }
+
+    if (serialized.size() > MAX_BUFFER_SIZE)
+    {
+        LOG_ERROR("Data size exceeds buffer limit\n");
+        return;
+    }
+    outPacket.ph.len  = PACKET_HEADER_SIZE + static_cast<int>(inSerializedData.ByteSizeLong());
+    outPacket.ph.type = packetType;
+    memcpy(outPacket.msg, serialized.c_str(), serialized.size());
+}
+
+template <class T>
+inline void HNetwork::DeserializePacket(const HPACKET& inPacket, T& outDeserializedData)
+{
+    int packetSize = inPacket.ph.len - PACKET_HEADER_SIZE;
+
+    if (!outDeserializedData.ParseFromArray(inPacket.msg, packetSize))
+    {
+        LOG_ERROR("Failed to deserialize packet\n");
+        return;
+    }
+
+    LOG_DEBUG("Deserialized packet\n");
+}

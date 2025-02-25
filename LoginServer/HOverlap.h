@@ -1,7 +1,5 @@
 #pragma once
-#include <WinSock2.h>
-
-#define MAX_BUFFER_SIZE 1024
+#include "pch.h"
 
 enum RW_FLAG
 {
@@ -15,16 +13,39 @@ struct HOverlap : public OVERLAPPED
 {
     WSABUF           wsabuf;
     RW_FLAG          rwFlag;
-    char             buffer[MAX_BUFFER_SIZE];
+    char*            buffer;
     std::atomic<int> readPos;
     std::atomic<int> writePos;
 
     HOverlap()
     {
-        ZeroMemory(this, sizeof(*this));
+        LOG_DEBUG("오버랩 생성\n")
+        ZeroMemory(static_cast<OVERLAPPED*>(this), sizeof(OVERLAPPED));
+        rwFlag     = RW_FLAG::NONE;
+        buffer     = new char[MAX_BUFFER_SIZE];
         wsabuf.buf = buffer;
         wsabuf.len = MAX_BUFFER_SIZE;
         readPos    = 0;
         writePos   = 0;
     }
+
+    ~HOverlap()
+    {
+        LOG_DEBUG("오버랩 삭제\n")
+        if (buffer != nullptr)
+            delete[] buffer;
+    }
+
+    char* GetBuffer()
+    {
+        LOG_DEBUG("오버랩 버퍼 반환\n")
+        char* bufMoved = buffer;
+        buffer         = nullptr;
+        return bufMoved;
+    }
+
+    HOverlap(HOverlap&& other)           = delete;
+    HOverlap& operator=(HOverlap&&)      = delete;
+    HOverlap(const HOverlap&)            = delete;
+    HOverlap& operator=(const HOverlap&) = delete;
 };

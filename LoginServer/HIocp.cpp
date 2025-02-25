@@ -112,19 +112,22 @@ void HIocp::ProcessAsyncRecv(HSession* pSession, HOverlap* overlap, DWORD transf
     if (!overlap || !pSession)
         return;
 
-    memcpy(pSession->readPacket, overlap->buffer, transfer);
+    if (!overlap->buffer)
+        return;
+
+    memcpy(&pSession->recvPacket[overlap->readPos.load()], overlap->buffer, transfer);
     overlap->readPos += transfer;
 
     if (overlap->readPos >= PACKET_HEADER_SIZE)
     {
-        HPACKET* packet = (HPACKET*)pSession->readPacket;
+        HPACKET* packet = reinterpret_cast<HPACKET*>(pSession->recvPacket);
 
-        if (packet->ph.len >= overlap->readPos)
+        if (packet->ph.len <= overlap->readPos)
         {
-            pSession->readPacket[packet->ph.len] = '\0';
+            overlap->buffer[packet->ph.len - PACKET_HEADER_SIZE] = '\0';
             {
                 std::lock_guard<std::mutex> lock(m_addPacketMutex);
-                H_NETWORK.AddPacket(pSession->socket, packet);
+                H_NETWORK.AddPacket(pSession->socket, reinterpret_cast<HPACKET*>(overlap->GetBuffer()));
             }
 
             H_NETWORK.DeleteOverlap(overlap);
@@ -148,17 +151,11 @@ void HIocp::ProcessAsyncSend(HSession* pSession, HOverlap* overlap, DWORD transf
     if (!overlap || !pSession)
         return;
 
-    memcpy(pSession->sendPacket, overlap->buffer, transfer);
     overlap->writePos += transfer;
 
     if (overlap->writePos >= PACKET_HEADER_SIZE)
     {
-        HPACKET* packet = (HPACKET*)pSession->sendPacket;
-
-        if (packet->ph.len >= overlap->writePos)
-        {
-            pSession->sendPacket[transfer] = '\0';
+        if (static_cast<int>(overlap->InternalHigh) <= overlap->writePos)
             H_NETWORK.DeleteOverlap(overlap);
-        }
     }
 }

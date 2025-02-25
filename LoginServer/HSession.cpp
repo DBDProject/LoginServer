@@ -16,7 +16,6 @@ void HSession::AsyncSend(const char* data, int size)
         return;
     }
 
-
     HOverlap* overlap = H_NETWORK.AddOverlap();
     memcpy(overlap->buffer, data, size);
 
@@ -35,6 +34,7 @@ void HSession::AsyncSend(const char* data, int size)
         {
             H_NETWORK.PrintSockError(errorCode);
             H_NETWORK.m_sessionManager->DisConnect(socket);
+            H_NETWORK.DeleteOverlap(overlap);
         }
     }
 }
@@ -55,6 +55,7 @@ void HSession::AsyncRecv()
         {
             H_NETWORK.PrintSockError(errorCode);
             H_NETWORK.m_sessionManager->DisConnect(socket);
+            H_NETWORK.DeleteOverlap(overlap);
         }
     }
 }
