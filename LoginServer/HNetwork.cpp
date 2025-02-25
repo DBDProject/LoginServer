@@ -372,13 +372,18 @@ void HNetwork::ProcessPacket()
         switch (packet->ph.type)
         {
         case TPACKET_TYPE::PACKET_CHAT_MSG:
-            LOG_INFO("[{}]: {}\n", socket, packet->msg);
-            H_NETWORK.m_sessionManager->Broadcast(reinterpret_cast<char*>(packet), packet->ph.len);
+            HProtocol::Chat packetData;
+
+            if (HNetwork::DeserializePacket(*packet, packetData))
+                continue;
+
+            LOG_INFO("[{}]: {}\n", socket, packetData.msg())
+            H_NETWORK.m_sessionManager->Broadcast(packet);
         }
 
         if (packet)
         {
-            LOG_ERROR("Packet delete\n");
+            LOG_DEBUG("Packet delete\n");
             delete packet;
         }
     }

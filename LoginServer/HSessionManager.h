@@ -19,8 +19,7 @@ public:
     void Connect(SOCKET socket, const sockaddr_in& address);
     void DisConnect(SOCKET socket);
 
-    void Broadcast(const char* data, int size);
-    void Broadcast(const char* data, int size, SOCKET socket);
+    void Broadcast(const HPACKET* inPacket);
 
     void      DelUser();
     void      PrintUserList() const;

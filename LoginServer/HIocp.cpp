@@ -45,8 +45,7 @@ void HIocp::WorkerProcess()
     ULONG_PTR completionKey;
     HOverlap* lpOverlapped = nullptr;
 
-    bool isPacketProcess = false;
-    bool isDisconnected  = false;
+    bool isDisconnected = false;
 
     while (HNetwork::m_isRunning)
     {
@@ -57,6 +56,7 @@ void HIocp::WorkerProcess()
                                              INFINITE);
 
         HSession* pSession = (HSession*)completionKey;
+        isDisconnected     = false;
 
         if (!lpOverlapped || !pSession)
             continue;
@@ -91,6 +91,7 @@ void HIocp::WorkerProcess()
         {
             H_NETWORK.m_sessionManager->DisConnect(pSession->socket);
             H_NETWORK.DeleteOverlap(lpOverlapped);
+            LOG_DEBUG("플레이어 종료로 인한 오버랩 삭제\n")
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -124,7 +125,6 @@ void HIocp::ProcessAsyncRecv(HSession* pSession, HOverlap* overlap, DWORD transf
 
         if (packet->ph.len <= overlap->readPos)
         {
-            overlap->buffer[packet->ph.len - PACKET_HEADER_SIZE] = '\0';
             {
                 std::lock_guard<std::mutex> lock(m_addPacketMutex);
                 H_NETWORK.AddPacket(pSession->socket, reinterpret_cast<HPACKET*>(overlap->GetBuffer()));
@@ -132,6 +132,7 @@ void HIocp::ProcessAsyncRecv(HSession* pSession, HOverlap* overlap, DWORD transf
 
             H_NETWORK.DeleteOverlap(overlap);
             pSession->AsyncRecv();
+            LOG_DEBUG("Recv 오버랩 삭제\n")
         }
     }
 }
@@ -156,6 +157,9 @@ void HIocp::ProcessAsyncSend(HSession* pSession, HOverlap* overlap, DWORD transf
     if (overlap->writePos >= PACKET_HEADER_SIZE)
     {
         if (static_cast<int>(overlap->InternalHigh) <= overlap->writePos)
+        {
             H_NETWORK.DeleteOverlap(overlap);
+            LOG_DEBUG("Send 오버랩 삭제\n")
+        }
     }
 }

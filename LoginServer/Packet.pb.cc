@@ -71,7 +71,7 @@ static const ::_pb::Message* const file_default_instances[] = {
 };
 const char descriptor_table_protodef_Packet_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
     "\n\014Packet.proto\022\tHProtocol\"\023\n\004Chat\022\013\n\003msg"
-    "\030\001 \001(\tb\006proto3"
+    "\030\001 \001(\014b\006proto3"
 };
 static ::absl::once_flag descriptor_table_Packet_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_Packet_2eproto = {
@@ -178,7 +178,7 @@ const char* Chat::_InternalParse(
 
 
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 1, 0, 26, 2> Chat::_table_ = {
+const ::_pbi::TcParseTable<0, 1, 0, 0, 2> Chat::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
@@ -192,21 +192,18 @@ const ::_pbi::TcParseTable<0, 1, 0, 26, 2> Chat::_table_ = {
     &_Chat_default_instance_._instance,
     ::_pbi::TcParser::GenericFallback,  // fallback
   }, {{
-    // string msg = 1;
-    {::_pbi::TcParser::FastUS1,
+    // bytes msg = 1;
+    {::_pbi::TcParser::FastBS1,
      {10, 63, 0, PROTOBUF_FIELD_OFFSET(Chat, _impl_.msg_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // string msg = 1;
+    // bytes msg = 1;
     {PROTOBUF_FIELD_OFFSET(Chat, _impl_.msg_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    (0 | ::_fl::kFcSingular | ::_fl::kBytes | ::_fl::kRepAString)},
   }},
   // no aux_entries
   {{
-    "\16\3\0\0\0\0\0\0"
-    "HProtocol.Chat"
-    "msg"
   }},
 };
 
@@ -217,12 +214,10 @@ const ::_pbi::TcParseTable<0, 1, 0, 26, 2> Chat::_table_ = {
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
-  // string msg = 1;
+  // bytes msg = 1;
   if (!this->_internal_msg().empty()) {
     const std::string& _s = this->_internal_msg();
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-        _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "HProtocol.Chat.msg");
-    target = stream->WriteStringMaybeAliased(1, _s, target);
+    target = stream->WriteBytesMaybeAliased(1, _s, target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -242,9 +237,9 @@ const ::_pbi::TcParseTable<0, 1, 0, 26, 2> Chat::_table_ = {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // string msg = 1;
+  // bytes msg = 1;
   if (!this->_internal_msg().empty()) {
-    total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+    total_size += 1 + ::google::protobuf::internal::WireFormatLite::BytesSize(
                                     this->_internal_msg());
   }
 

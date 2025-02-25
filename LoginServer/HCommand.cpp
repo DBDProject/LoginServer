@@ -14,7 +14,10 @@ void HCommand::InitCommand()
 void HCommand::ProcessCommand(const std::string& command)
 {
     if (command.size() <= 0 || command[0] != '/')
+    {
+        LOG_INFO("명령어는 '/'로 시작해야 합니다.\n")
         return;
+    }
 
     std::string cmd = std::move(command.substr(1, command.size()));
     std::string token;
@@ -25,7 +28,7 @@ void HCommand::ProcessCommand(const std::string& command)
     if (m_commandMap.contains(token))
         m_commandMap[token](cmd);
     else
-        LOG_INFO("Unknown command\n")
+        LOG_INFO("존재하지 않는 명령어 입니다. /help 참조\n")
 }
 
 void HCommand::CommandHelp(const std::string& command)
@@ -58,9 +61,12 @@ void HCommand::CommandSay(const std::string& command)
     std::string msg;
     msg = std::move(command.substr(4, command.size()));
 
-    HPACKET packet;
-    packet.ph.len  = PACKET_HEADER_SIZE + msg.size() * sizeof(char);
-    packet.ph.type = TPACKET_TYPE::PACKET_CHAT_MSG;
-    strcpy_s(packet.msg, msg.c_str());
-    H_NETWORK.m_sessionManager->Broadcast(reinterpret_cast<char*>(&packet), packet.ph.len);
+    HProtocol::Chat packetData;
+    HPACKET         packet;
+
+    packetData.set_msg(msg);
+    HNetwork::SerializePacket(TPACKET_TYPE::PACKET_CHAT_MSG, packetData, packet);
+
+    LOG_INFO("[Server] : {}\n", msg);
+    H_NETWORK.m_sessionManager->Broadcast(&packet);
 }

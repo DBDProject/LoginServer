@@ -19,7 +19,6 @@ struct HOverlap : public OVERLAPPED
 
     HOverlap()
     {
-        LOG_DEBUG("¿À¹ö·¦ »ý¼º\n")
         ZeroMemory(static_cast<OVERLAPPED*>(this), sizeof(OVERLAPPED));
         rwFlag     = RW_FLAG::NONE;
         buffer     = new char[MAX_BUFFER_SIZE];
@@ -31,7 +30,6 @@ struct HOverlap : public OVERLAPPED
 
     ~HOverlap()
     {
-        LOG_DEBUG("¿À¹ö·¦ »èÁ¦\n")
         if (buffer != nullptr)
             delete[] buffer;
     }

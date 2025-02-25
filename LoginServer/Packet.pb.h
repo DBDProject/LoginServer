@@ -206,7 +206,7 @@ class Chat final :
   enum : int {
     kMsgFieldNumber = 1,
   };
-  // string msg = 1;
+  // bytes msg = 1;
   void clear_msg() ;
   const std::string& msg() const;
   template <typename Arg_ = const std::string&, typename... Args_>
@@ -229,7 +229,7 @@ class Chat final :
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
       0, 1, 0,
-      26, 2>
+      0, 2>
       _table_;
   friend class ::google::protobuf::MessageLite;
   friend class ::google::protobuf::Arena;
@@ -269,7 +269,7 @@ class Chat final :
 
 // Chat
 
-// string msg = 1;
+// bytes msg = 1;
 inline void Chat::clear_msg() {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   _impl_.msg_.ClearToEmpty();
@@ -284,7 +284,7 @@ inline PROTOBUF_ALWAYS_INLINE void Chat::set_msg(Arg_&& arg,
                                                      Args_... args) {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   ;
-  _impl_.msg_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  _impl_.msg_.SetBytes(static_cast<Arg_&&>(arg), args..., GetArena());
   // @@protoc_insertion_point(field_set:HProtocol.Chat.msg)
 }
 inline std::string* Chat::mutable_msg() ABSL_ATTRIBUTE_LIFETIME_BOUND {

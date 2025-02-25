@@ -59,22 +59,12 @@ bool HSessionManager::IsConnected(SOCKET socket)
     return m_hSessions.contains(socket);
 }
 
-void HSessionManager::Broadcast(const char* data, int size)
+void HSessionManager::Broadcast(const HPACKET* inPacket)
 {
     std::lock_guard<std::mutex> lock(m_mutex);
     for (auto& [socket, userSession] : m_hSessions)
     {
-        userSession.AsyncSend(data, size);
-    }
-}
-
-void HSessionManager::Broadcast(const char* data, int size, SOCKET socket)
-{
-    std::lock_guard<std::mutex> lock(m_mutex);
-    for (auto& [userSocket, userSession] : m_hSessions)
-    {
-        if (userSocket != socket)
-            userSession.AsyncSend(data, size);
+        userSession.AsyncSend(inPacket);
     }
 }
 

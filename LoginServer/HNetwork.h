@@ -51,43 +51,49 @@ public:
     std::string GetExternalServerIP();
 
     template <class T>
-    static void SerializePacket(const TPACKET_TYPE packetType, const T& inSerializedData,
+        requires std::is_base_of_v<google::protobuf::Message, T>
+    static bool SerializePacket(const TPACKET_TYPE packetType, const T& inSerializedData,
                                 HPACKET& outPacket);
     template <class T>
-    static void DeserializePacket(const HPACKET& inPacket, T& outDeserializedData);
+        requires std::is_base_of_v<google::protobuf::Message, T>
+    static bool DeserializePacket(const HPACKET& inPacket, T& outDeserializedData);
 };
 
 template <class T>
-inline void HNetwork::SerializePacket(const TPACKET_TYPE packetType, const T& inSerializedData,
+    requires std::is_base_of_v<google::protobuf::Message, T>
+inline bool HNetwork::SerializePacket(const TPACKET_TYPE packetType, const T& inSerializedData,
                                       HPACKET& outPacket)
 {
     std::string serialized(inSerializedData.ByteSizeLong(), '\0');
     if (!inSerializedData.SerializeToString(&serialized))
     {
         LOG_ERROR("Failed to serialize packet\n");
-        return;
+        return false;
     }
 
     if (serialized.size() > MAX_BUFFER_SIZE)
     {
         LOG_ERROR("Data size exceeds buffer limit\n");
-        return;
+        return false;
     }
-    outPacket.ph.len  = PACKET_HEADER_SIZE + static_cast<int>(inSerializedData.ByteSizeLong());
+    outPacket.ph.len  = PACKET_HEADER_SIZE + static_cast<int>(serialized.size());
     outPacket.ph.type = packetType;
     memcpy(outPacket.msg, serialized.c_str(), serialized.size());
+    return true;
 }
 
 template <class T>
-inline void HNetwork::DeserializePacket(const HPACKET& inPacket, T& outDeserializedData)
+    requires std::is_base_of_v<google::protobuf::Message, T>
+inline bool HNetwork::DeserializePacket(const HPACKET& inPacket, T& outDeserializedData)
 {
     int packetSize = inPacket.ph.len - PACKET_HEADER_SIZE;
 
     if (!outDeserializedData.ParseFromArray(inPacket.msg, packetSize))
     {
         LOG_ERROR("Failed to deserialize packet\n");
-        return;
+        return false;
     }
 
     LOG_DEBUG("Deserialized packet\n");
+    return true;
 }

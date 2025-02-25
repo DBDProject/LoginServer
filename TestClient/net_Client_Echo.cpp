@@ -11,8 +11,7 @@ void SenderThread(TNetClient& net)
     while (net.m_bRun)
     {
         Sendbuf.clear();
-        Sendbuf = UserName;
-        // std::cout << "데이터입력(종료:엔터) : ";
+        std::cout << "데이터입력(종료:엔터) : ";
         std::getline(std::cin, KeyDatabuf);
         if (KeyDatabuf.empty())
         {

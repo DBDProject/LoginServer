@@ -11,6 +11,6 @@ struct HSession
 
     HSession();
 
-    void AsyncSend(const char* data, int size);
+    void AsyncSend(const HPACKET* inPacket);
     void AsyncRecv();
 };
