@@ -41,7 +41,7 @@ public:
     void StopServer();
 
     void AddPacket(SOCKET socket, HPACKET* packet);
-    void ProcessPactket();
+    void ProcessPacket();
 
     HOverlap* AddOverlap();
     bool      DeleteOverlap(HOverlap* overlap);

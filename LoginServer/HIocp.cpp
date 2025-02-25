@@ -2,9 +2,15 @@
 #include "HIocp.h"
 #include "HNetwork.h"
 
+/**
+ * @brief Initializes the IOCP handler
+ *
+ * Creates an IOCP handle, initializes the thread pool and sets up worker threads
+ * to process I/O completion notifications.
+ */
 void HIocp::Init()
 {
-    LOG_INFO("Iocp init\n")
+    LOG_INFO("Iocp init\n");
     m_threadPool.Init();
     m_hIocp = CreateIoCompletionPort(INVALID_HANDLE_VALUE, NULL, 0, 0);
     if (m_hIocp == NULL)
@@ -12,16 +18,27 @@ void HIocp::Init()
 
     m_threadPool.SetTask(std::bind(&HIocp::WorkerProcess, this));
     m_threadPool.Run();
-    LOG_INFO("Iocp init complete\n")
+    LOG_INFO("Iocp init complete\n");
 }
 
+/**
+ * @brief Releases resources used by the IOCP handler
+ *
+ * Performs cleanup by releasing the thread pool and closing the IOCP handle.
+ */
 void HIocp::Release()
 {
     m_threadPool.Release();
     CloseHandle(m_hIocp);
-    LOG_INFO("Iocp release\n")
+    LOG_INFO("Iocp release\n");
 }
 
+/**
+ * @brief Worker thread process for handling I/O completion notifications
+ *
+ * Continuously processes completion notifications from the IOCP queue and handles
+ * them based on their completion type (receive, send, or disconnection).
+ */
 void HIocp::WorkerProcess()
 {
     DWORD     dwTransfer;
@@ -80,6 +97,16 @@ void HIocp::WorkerProcess()
     }
 }
 
+/**
+ * @brief Processes asynchronous receive completion
+ *
+ * @param pSession The session that received data
+ * @param overlap The overlapped structure containing buffer information
+ * @param transfer The number of bytes transferred in this operation
+ *
+ * Handles the received data by copying it to the session's read buffer and
+ * processing complete packets when enough data is available.
+ */
 void HIocp::ProcessAsyncRecv(HSession* pSession, HOverlap* overlap, DWORD transfer)
 {
     if (!overlap || !pSession)
@@ -106,6 +133,16 @@ void HIocp::ProcessAsyncRecv(HSession* pSession, HOverlap* overlap, DWORD transf
     }
 }
 
+/**
+ * @brief Processes asynchronous send completion
+ *
+ * @param pSession The session that sent data
+ * @param overlap The overlapped structure containing buffer information
+ * @param transfer The number of bytes transferred in this operation
+ *
+ * Handles the completion of a send operation by updating buffers and cleaning up
+ * when the operation is complete.
+ */
 void HIocp::ProcessAsyncSend(HSession* pSession, HOverlap* overlap, DWORD transfer)
 {
     if (!overlap || !pSession)
