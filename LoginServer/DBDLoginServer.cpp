@@ -58,4 +58,5 @@ void DBDLoginServer::Run()
 
     Release();
     LOG_INFO("Server terminated\n")
+    system("pause");
 }

@@ -74,6 +74,9 @@
     <OutDir>..\..\output\debug\</OutDir>
     <IntDir>..\..\output</IntDir>
   </PropertyGroup>
+  <PropertyGroup Label="Vcpkg">
+    <VcpkgEnabled>false</VcpkgEnabled>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -120,9 +123,8 @@
       <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
-      <Command>copy /Y "$(SolutionDir)ThirdParty\google\protobuf\packet.pb.cc" "$(ProjectDir)"
-
-copy /Y "$(SolutionDir)ThirdParty\google\protobuf\packet.pb.h" "$(ProjectDir)"
+      <Command>copy /Y "$(SolutionDir)ThirdParty\protobuf\packet.pb.cc" "$(ProjectDir)"
+copy /Y "$(SolutionDir)ThirdParty\protobuf\packet.pb.h" "$(ProjectDir)"
 </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>

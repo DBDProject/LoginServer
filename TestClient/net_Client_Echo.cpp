@@ -29,7 +29,7 @@ void SenderThread(TNetClient& net)
 int main()
 {
     TNetClient net;
-    net.Connected("127.0.0.1", 5000);
+    net.Connected("182.226.113.68", 5000);
 
     // 종업원 1명
     std::thread sendThread(SenderThread, std::ref(net));

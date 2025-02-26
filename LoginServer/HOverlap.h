@@ -37,9 +37,7 @@ struct HOverlap : public OVERLAPPED
     char* GetBuffer()
     {
         LOG_DEBUG("오버랩 버퍼 반환\n")
-        char* bufMoved = buffer;
-        buffer         = nullptr;
-        return bufMoved;
+        return std::exchange(buffer, nullptr);
     }
 
     HOverlap(HOverlap&& other)           = delete;

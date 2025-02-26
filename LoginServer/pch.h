@@ -26,11 +26,11 @@
 
 #ifdef _DEBUG
     #pragma comment(lib, "fmt/lib/fmtd.lib")
-    #pragma comment(lib, "google/protobuf/lib/libprotobufd.lib")
+    #pragma comment(lib, "protobuf/lib/libprotobufd.lib")
 
 #else
     #pragma comment(lib, "fmt/lib/fmt.lib")
-    #pragma comment(lib, "google/protobuf/lib/libprotobuf.lib")
+    #pragma comment(lib, "protobuf/lib/libprotobuf.lib")
 #endif
 
 #define DEBUG_PRINT
@@ -50,7 +50,6 @@
 #else
     #define LOG_DEBUG(format, ...)
 #endif
-
 
 #include "HConvention.h"
 #include "HSingleton.h"

@@ -128,6 +128,8 @@ void HIocp::ProcessAsyncRecv(HSession* pSession, HOverlap* overlap, DWORD transf
             {
                 std::lock_guard<std::mutex> lock(m_addPacketMutex);
                 H_NETWORK.AddPacket(pSession->socket, reinterpret_cast<HPACKET*>(overlap->GetBuffer()));
+                // 만약 예외가 발생하면 메모리 누수가 날 수 있음
+                // 언젠가 RAII로 수정해야함
             }
 
             H_NETWORK.DeleteOverlap(overlap);
