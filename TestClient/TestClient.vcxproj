@@ -86,8 +86,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IntDir>..\..\output\</IntDir>
-    <OutDir>..\..\output\debug\</OutDir>
+    <IntDir>..\output\debug\testclient</IntDir>
+    <OutDir>..\output\debug</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>..\..\output\release\</OutDir>

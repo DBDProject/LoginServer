@@ -71,8 +71,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>..\..\output\debug\</OutDir>
-    <IntDir>..\..\output</IntDir>
+    <OutDir>..\output\debug</OutDir>
+    <IntDir>..\output\debug\loginserver</IntDir>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg">
     <VcpkgEnabled>false</VcpkgEnabled>
@@ -116,6 +116,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)ThirdParty\fmt\include;$(SolutionDir)ThirdParty\protobuf\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4251;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -123,8 +124,8 @@
       <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
-      <Command>copy /Y "$(SolutionDir)ThirdParty\protobuf\packet.pb.cc" "$(ProjectDir)"
-copy /Y "$(SolutionDir)ThirdParty\protobuf\packet.pb.h" "$(ProjectDir)"
+      <Command>copy /Y "$(SolutionDir)ThirdParty\protobuf\Packet.pb.cc" "$(ProjectDir)"
+copy /Y "$(SolutionDir)ThirdParty\protobuf\Packet.pb.h" "$(ProjectDir)"
 </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
