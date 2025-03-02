@@ -54,6 +54,7 @@
 #include "HConvention.h"
 #include "HSingleton.h"
 #include "HProtocol.h"
+#include "HNetAPI.h"
 
 using namespace std::chrono;
 

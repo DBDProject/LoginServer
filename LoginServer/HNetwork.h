@@ -51,16 +51,13 @@ public:
     std::string GetExternalServerIP();
 
     template <class T>
-        requires std::is_base_of_v<google::protobuf::Message, T>
     static bool SerializePacket(const TPACKET_TYPE packetType, const T& inSerializedData,
                                 HPACKET& outPacket);
     template <class T>
-        requires std::is_base_of_v<google::protobuf::Message, T>
     static bool DeserializePacket(const HPACKET& inPacket, T& outDeserializedData);
 };
 
 template <class T>
-    requires std::is_base_of_v<google::protobuf::Message, T>
 inline bool HNetwork::SerializePacket(const TPACKET_TYPE packetType, const T& inSerializedData,
                                       HPACKET& outPacket)
 {
@@ -83,7 +80,6 @@ inline bool HNetwork::SerializePacket(const TPACKET_TYPE packetType, const T& in
 }
 
 template <class T>
-    requires std::is_base_of_v<google::protobuf::Message, T>
 inline bool HNetwork::DeserializePacket(const HPACKET& inPacket, T& outDeserializedData)
 {
     int packetSize = inPacket.ph.len - PACKET_HEADER_SIZE;

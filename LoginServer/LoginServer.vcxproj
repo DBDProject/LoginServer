@@ -171,6 +171,7 @@ copy /Y "$(SolutionDir)ThirdParty\protobuf\Packet.pb.h" "$(ProjectDir)"
     <ClInclude Include="DBDLoginServer.h" />
     <ClInclude Include="HCommand.h" />
     <ClInclude Include="HConvention.h" />
+    <ClInclude Include="HNetAPI.h" />
     <ClInclude Include="HProtocol.h" />
     <ClInclude Include="HIocp.h" />
     <ClInclude Include="HNetwork.h" />

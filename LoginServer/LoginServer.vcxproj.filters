@@ -88,6 +88,9 @@
     <ClInclude Include="Packet.pb.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="HNetAPI.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.clang-format">

@@ -4,5 +4,5 @@ package HProtocol;
 
 message Chat
 {
-	bytes msg = 1;
+	string msg = 1;
 }

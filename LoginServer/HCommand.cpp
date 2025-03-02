@@ -59,7 +59,7 @@ void HCommand::CommandOverlapList(const std::string& command)
 void HCommand::CommandSay(const std::string& command)
 {
     std::string msg;
-    msg = std::move(command.substr(4, command.size()));
+    msg = command.substr(4);
 
     HProtocol::Chat packetData;
     HPACKET         packet;

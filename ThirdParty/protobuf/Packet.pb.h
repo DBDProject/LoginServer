@@ -179,7 +179,7 @@ class Chat final :
   enum : int {
     kMsgFieldNumber = 1,
   };
-  // bytes msg = 1;
+  // string msg = 1;
   void clear_msg();
   const std::string& msg() const;
   template <typename ArgT0 = const std::string&, typename... ArgT>
@@ -218,7 +218,7 @@ class Chat final :
 #endif  // __GNUC__
 // Chat
 
-// bytes msg = 1;
+// string msg = 1;
 inline void Chat::clear_msg() {
   _impl_.msg_.ClearToEmpty();
 }
@@ -230,7 +230,7 @@ template <typename ArgT0, typename... ArgT>
 inline PROTOBUF_ALWAYS_INLINE
 void Chat::set_msg(ArgT0&& arg0, ArgT... args) {
  
- _impl_.msg_.SetBytes(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+ _impl_.msg_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
   // @@protoc_insertion_point(field_set:HProtocol.Chat.msg)
 }
 inline std::string* Chat::mutable_msg() {
