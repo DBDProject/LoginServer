@@ -128,6 +128,9 @@
 copy /Y "$(SolutionDir)ThirdParty\protobuf\Packet.pb.h" "$(ProjectDir)"
 </Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>copy /Y "$(SolutionDir)ThirdParty\protobuf\libprotobufd.dll" "$(SolutionDir)output\debug"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
