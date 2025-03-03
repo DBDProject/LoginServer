@@ -371,7 +371,7 @@ void HNetwork::ProcessPacket()
 
         switch (packet->ph.type)
         {
-        case TPACKET_TYPE::PACKET_CHAT_MSG:
+        case HPACKET_TYPE::CHAT_MSG:
             HProtocol::Chat packetData;
 
             if (HNetwork::DeserializePacket(*packet, packetData))

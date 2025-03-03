@@ -65,7 +65,7 @@ void HCommand::CommandSay(const std::string& command)
     HPACKET         packet;
 
     packetData.set_msg(msg);
-    HNetwork::SerializePacket(TPACKET_TYPE::PACKET_CHAT_MSG, packetData, packet);
+    HNetwork::SerializePacket(HPACKET_TYPE::CHAT_MSG, packetData, packet);
 
     LOG_INFO("[Server] : {}\n", msg);
     H_NETWORK.m_sessionManager->Broadcast(&packet);

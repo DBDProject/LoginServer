@@ -51,14 +51,14 @@ public:
     std::string GetExternalServerIP();
 
     template <class T>
-    static bool SerializePacket(const TPACKET_TYPE packetType, const T& inSerializedData,
+    static bool SerializePacket(const HPACKET_TYPE packetType, const T& inSerializedData,
                                 HPACKET& outPacket);
     template <class T>
     static bool DeserializePacket(const HPACKET& inPacket, T& outDeserializedData);
 };
 
 template <class T>
-inline bool HNetwork::SerializePacket(const TPACKET_TYPE packetType, const T& inSerializedData,
+inline bool HNetwork::SerializePacket(const HPACKET_TYPE packetType, const T& inSerializedData,
                                       HPACKET& outPacket)
 {
     std::string serialized(inSerializedData.ByteSizeLong(), '\0');
