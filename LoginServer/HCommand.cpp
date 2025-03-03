@@ -64,7 +64,7 @@ void HCommand::CommandSay(const std::string& command)
     HProtocol::Chat packetData;
     HPACKET         packet;
 
-    packetData.set_msg(msg);
+    packetData.set_msg(HNetAPI::ConvertCP949ToUTF8(msg));
     HNetwork::SerializePacket(HPACKET_TYPE::CHAT_MSG, packetData, packet);
 
     LOG_INFO("[Server] : {}\n", msg);

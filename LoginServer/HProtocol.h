@@ -1,6 +1,6 @@
 #pragma once
 
-enum class HPACKET_TYPE : short
+enum class HPACKET_TYPE : UINT16
 {
     CHAT_MSG = 0
 };
