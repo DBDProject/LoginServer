@@ -374,10 +374,12 @@ void HNetwork::ProcessPacket()
         case HPACKET_TYPE::CHAT_MSG:
             HProtocol::Chat packetData;
 
-            if (HNetwork::DeserializePacket(*packet, packetData))
+            if (!HNetwork::DeserializePacket(*packet, packetData))
                 continue;
 
-            LOG_INFO("[{}]: {}\n", socket, packetData.msg())
+
+            std::string packetMsg = HNetAPI::ConvertUTF8ToCP949(packetData.msg());
+            LOG_INFO("[{}]: {}\n", socket, packetMsg)
             H_NETWORK.m_sessionManager->Broadcast(packet);
         }
 

@@ -49,4 +49,34 @@ public:
 
         return std::move(utf8String);
     }
+
+    // UTF-8 → CP949 변환 함수
+    static std::string ConvertUTF8ToCP949(const std::string& utf8_str)
+    {
+        // UTF-8 → UTF-16 변환
+        int utf16_size = MultiByteToWideChar(CP_UTF8, 0, utf8_str.c_str(), -1, nullptr, 0);
+        if (utf16_size == 0)
+            return "";
+
+        std::wstring utf16_str(utf16_size, 0);
+        MultiByteToWideChar(CP_UTF8, 0, utf8_str.c_str(), -1, &utf16_str[0], utf16_size);
+
+        // UTF-16 → CP949 변환
+        int cp949_size =
+        WideCharToMultiByte(CP_ACP, 0, utf16_str.c_str(), -1, nullptr, 0, nullptr, nullptr);
+        if (cp949_size == 0)
+            return "";
+
+        std::string cp949_str(cp949_size, 0);
+        WideCharToMultiByte(CP_ACP,
+                            0,
+                            utf16_str.c_str(),
+                            -1,
+                            &cp949_str[0],
+                            cp949_size,
+                            nullptr,
+                            nullptr);
+
+        return std::move(cp949_str);
+    }
 };

@@ -58,15 +58,24 @@ void HCommand::CommandOverlapList(const std::string& command)
 
 void HCommand::CommandSay(const std::string& command)
 {
+    if (command.size() <= 4)
+    {
+        LOG_INFO("메시지를 입력해주세요. /say <msg>\n");
+        return;
+    }
+
     std::string msg;
+    std::string serverPrefix = "[Server] : ";
+
     msg = command.substr(4);
 
+    serverPrefix.append(msg);
     HProtocol::Chat packetData;
     HPACKET         packet;
 
-    packetData.set_msg(HNetAPI::ConvertCP949ToUTF8(msg));
+    packetData.set_msg(HNetAPI::ConvertCP949ToUTF8(serverPrefix));
     HNetwork::SerializePacket(HPACKET_TYPE::CHAT_MSG, packetData, packet);
 
-    LOG_INFO("[Server] : {}\n", msg);
+    LOG_INFO("{}\n", serverPrefix);
     H_NETWORK.m_sessionManager->Broadcast(&packet);
 }
