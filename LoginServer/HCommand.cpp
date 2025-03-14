@@ -4,11 +4,13 @@
 
 void HCommand::InitCommand()
 {
-    m_commandMap["help"]   = HCommand::CommandHelp;
-    m_commandMap["list"]   = HCommand::CommandUserList;
-    m_commandMap["exit"]   = HCommand::CommandExit;
-    m_commandMap["ovlist"] = HCommand::CommandOverlapList;
-    m_commandMap["say"]    = HCommand::CommandSay;
+    m_commandMap["help"]      = HCommand::CommandHelp;
+    m_commandMap["list"]      = HCommand::CommandUserList;
+    m_commandMap["matchlist"] = HCommand::CommandMatchList;
+    m_commandMap["maxplayer"] = HCommand::CommandSetMatchPlayer;
+    m_commandMap["say"]       = HCommand::CommandSay;
+    m_commandMap["exit"]      = HCommand::CommandExit;
+    m_commandMap["ovlist"]    = HCommand::CommandOverlapList;
 }
 
 void HCommand::ProcessCommand(const std::string& command)
@@ -36,9 +38,11 @@ void HCommand::CommandHelp(const std::string& command)
     LOG_INFO("Command List\n")
     LOG_INFO("/help : Show command list\n")
     LOG_INFO("/list : Show user list\n")
-    LOG_INFO("/ovlist : Show overlap list\n")
-    LOG_INFO("/say : Send message to all user\n")
+    LOG_INFO("/matchlist : Show match list\n")
+    LOG_INFO("/maxplayer <인원 수> : 매칭 최대 인원을 설정한다.\n")
+    LOG_INFO("/say <할말> : Send message to all user\n")
     LOG_INFO("/exit : Server shutdown\n")
+    LOG_INFO("/ovlist : Show overlap list\n")
 }
 
 void HCommand::CommandExit(const std::string& command)
@@ -79,3 +83,7 @@ void HCommand::CommandSay(const std::string& command)
     LOG_INFO("{}\n", serverPrefix);
     H_NETWORK.m_sessionManager->Broadcast(&packet);
 }
+
+void HCommand::CommandMatchList(const std::string& command) {}
+
+void HCommand::CommandSetMatchPlayer(const std::string& command) {}

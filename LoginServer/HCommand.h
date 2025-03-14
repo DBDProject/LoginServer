@@ -15,4 +15,6 @@ public:
     static void CommandUserList(const std::string& command);
     static void CommandOverlapList(const std::string& command);
     static void CommandSay(const std::string& command);
+    static void CommandMatchList(const std::string& command);
+    static void CommandSetMatchPlayer(const std::string& command);
 };
