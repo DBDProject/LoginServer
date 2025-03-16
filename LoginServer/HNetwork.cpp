@@ -27,8 +27,10 @@ void HNetwork::InitWinSock()
 void HNetwork::Init()
 {
     m_sessionManager = std::make_unique<HSessionManager>();
+    m_matching       = std::make_unique<HMatching>();
     InitWinSock();
     m_iocp.Init();
+    HPacketProcessor::Init();
 }
 
 /**
@@ -168,10 +170,15 @@ void HNetwork::StopServer()
  *
  * Adds a packet to the queue for later processing.
  */
-void HNetwork::AddPacket(SOCKET socket, HPACKET* packet)
+void HNetwork::AddPacket(SOCKET socket, std::shared_ptr<HPACKET> packet)
 {
     if (packet)
-        m_packetQueue.push(std::make_pair(socket, packet));
+    {
+        {
+            std::lock_guard<std::mutex> lock(m_addPacketMutex);
+            m_packetQueue.push(std::make_pair(socket, packet));
+        }
+    }
 }
 
 /**
@@ -364,31 +371,17 @@ bool HNetwork::AcceptClient()
  */
 void HNetwork::ProcessPacket()
 {
+    if (!m_addPacketMutex.try_lock())
+        return;
+
     while (!m_packetQueue.empty())
     {
         auto [socket, packet] = std::move(m_packetQueue.front());
         m_packetQueue.pop();
-
-        switch (packet->ph.type)
-        {
-        case HPACKET_TYPE::CHAT_MSG:
-            HProtocol::Chat packetData;
-
-            if (!HNetwork::DeserializePacket(*packet, packetData))
-                continue;
-
-
-            std::string packetMsg = HNetAPI::ConvertUTF8ToCP949(packetData.msg());
-            LOG_INFO("[{}]: {}\n", socket, packetMsg)
-            H_NETWORK.m_sessionManager->Broadcast(packet);
-        }
-
-        if (packet)
-        {
-            LOG_DEBUG("Packet delete\n");
-            delete packet;
-        }
+        HPacketProcessor::Process(socket, packet);
     }
+
+    m_addPacketMutex.unlock();
 }
 
 /**

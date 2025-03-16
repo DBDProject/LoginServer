@@ -2,7 +2,7 @@
 #include "HCommand.h"
 #include "HNetwork.h"
 
-void HCommand::InitCommand()
+void HCommand::Init()
 {
     m_commandMap["help"]      = HCommand::CommandHelp;
     m_commandMap["list"]      = HCommand::CommandUserList;
@@ -74,16 +74,39 @@ void HCommand::CommandSay(const std::string& command)
     msg = command.substr(4);
 
     serverPrefix.append(msg);
-    HProtocol::Chat packetData;
-    HPACKET         packet;
+    HProtocol::Chat          packetData;
+    std::shared_ptr<HPACKET> packet = std::make_shared<HPACKET>();
 
     packetData.set_msg(HNetAPI::ConvertCP949ToUTF8(serverPrefix));
-    HNetwork::SerializePacket(HPACKET_TYPE::CHAT_MSG, packetData, packet);
+    HPacketProcessor::SerializePacket(HPACKET_TYPE::CHAT_MSG, packetData, *packet);
 
     LOG_INFO("{}\n", serverPrefix);
-    H_NETWORK.m_sessionManager->Broadcast(&packet);
+    H_NETWORK.m_sessionManager->Broadcast(packet);
 }
 
-void HCommand::CommandMatchList(const std::string& command) {}
+void HCommand::CommandMatchList(const std::string& command)
+{
+    H_NETWORK.m_matching->PrintWaitingList();
+}
 
-void HCommand::CommandSetMatchPlayer(const std::string& command) {}
+void HCommand::CommandSetMatchPlayer(const std::string& command)
+{
+    std::string        token;
+    std::istringstream iss(command);
+    iss >> token;
+    if (iss.eof())
+    {
+        LOG_INFO("인원 수를 입력해주세요. /maxplayer <인원 수>\n");
+        return;
+    }
+    int player = 0;
+    iss >> player;
+    if (player <= 2)
+    {
+        LOG_INFO("인원 수는 2보다 커야합니다.\n");
+        return;
+    }
+
+    H_NETWORK.m_matching->SetMatchPlayer(player);
+    LOG_INFO("매칭 최대 인원이 {}명으로 설정되었습니다.\n", player);
+}

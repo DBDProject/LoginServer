@@ -154,7 +154,9 @@ copy /Y "$(SolutionDir)ThirdParty\protobuf\Packet.pb.h" "$(ProjectDir)"
     <ClCompile Include="DBDLoginServer.cpp" />
     <ClCompile Include="HCommand.cpp" />
     <ClCompile Include="HIocp.cpp" />
+    <ClCompile Include="HMatching.cpp" />
     <ClCompile Include="HNetwork.cpp" />
+    <ClCompile Include="HPacketProcessor.cpp" />
     <ClCompile Include="HSession.cpp" />
     <ClCompile Include="HSessionManager.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -171,7 +173,9 @@ copy /Y "$(SolutionDir)ThirdParty\protobuf\Packet.pb.h" "$(ProjectDir)"
     <ClInclude Include="DBDLoginServer.h" />
     <ClInclude Include="HCommand.h" />
     <ClInclude Include="HConvention.h" />
+    <ClInclude Include="HMatching.h" />
     <ClInclude Include="HNetAPI.h" />
+    <ClInclude Include="HPacketProcessor.h" />
     <ClInclude Include="HProtocol.h" />
     <ClInclude Include="HIocp.h" />
     <ClInclude Include="HNetwork.h" />

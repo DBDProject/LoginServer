@@ -19,7 +19,7 @@ public:
     void Connect(SOCKET socket, const sockaddr_in& address);
     void DisConnect(SOCKET socket);
 
-    void Broadcast(const HPACKET* inPacket);
+    void Broadcast(const std::shared_ptr<HPACKET> inPacket);
 
     void      DelUser();
     void      PrintUserList() const;

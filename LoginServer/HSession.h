@@ -11,6 +11,6 @@ struct HSession
 
     HSession();
 
-    void AsyncSend(const HPACKET* inPacket);
+    void AsyncSend(const std::shared_ptr<HPACKET> inPacket);
     void AsyncRecv();
 };

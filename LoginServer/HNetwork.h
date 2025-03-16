@@ -4,6 +4,8 @@
 #include "HSessionManager.h"
 #include "HOverlap.h"
 #include "HIocp.h"
+#include "HPacketProcessor.h"
+#include "HMatching.h"
 
 #define H_NETWORK HNetwork::GetInstance()
 
@@ -14,15 +16,18 @@ private:
     SOCKET  m_serverSocket;
     HIocp   m_iocp;
 
-    std::queue<std::pair<SOCKET, HPACKET*>> m_packetQueue;
-    std::set<HOverlap*>                     m_overlapSet;
+    std::queue<std::pair<SOCKET, std::shared_ptr<HPACKET>>> m_packetQueue;
+
+    std::set<HOverlap*> m_overlapSet;
 
     std::mutex m_overlapMutex;
+    std::mutex m_addPacketMutex;
 
     H_SINGLETON_DECLARE(HNetwork)
 
 public:
     std::unique_ptr<HSessionManager> m_sessionManager;
+    std::unique_ptr<HMatching>       m_matching;
 
     inline static bool m_isRunning = true;
 
@@ -40,7 +45,7 @@ public:
     void CreateServer(int port);
     void StopServer();
 
-    void AddPacket(SOCKET socket, HPACKET* packet);
+    void AddPacket(SOCKET socket, std::shared_ptr<HPACKET> packet);
     void ProcessPacket();
 
     HOverlap* AddOverlap();
@@ -49,47 +54,4 @@ public:
 
     std::string GetInternalServerIP();
     std::string GetExternalServerIP();
-
-    template <class T>
-    static bool SerializePacket(const HPACKET_TYPE packetType, const T& inSerializedData,
-                                HPACKET& outPacket);
-    template <class T>
-    static bool DeserializePacket(const HPACKET& inPacket, T& outDeserializedData);
 };
-
-template <class T>
-inline bool HNetwork::SerializePacket(const HPACKET_TYPE packetType, const T& inSerializedData,
-                                      HPACKET& outPacket)
-{
-    std::string serialized(inSerializedData.ByteSizeLong(), '\0');
-    if (!inSerializedData.SerializeToString(&serialized))
-    {
-        LOG_ERROR("Failed to serialize packet\n");
-        return false;
-    }
-
-    if (serialized.size() > MAX_BUFFER_SIZE)
-    {
-        LOG_ERROR("Data size exceeds buffer limit\n");
-        return false;
-    }
-    outPacket.ph.len  = PACKET_HEADER_SIZE + static_cast<int>(serialized.size());
-    outPacket.ph.type = packetType;
-    memcpy(outPacket.msg, serialized.c_str(), serialized.size());
-    return true;
-}
-
-template <class T>
-inline bool HNetwork::DeserializePacket(const HPACKET& inPacket, T& outDeserializedData)
-{
-    int packetSize = inPacket.ph.len - PACKET_HEADER_SIZE;
-
-    if (!outDeserializedData.ParseFromArray(inPacket.msg, packetSize))
-    {
-        LOG_ERROR("Failed to deserialize packet\n");
-        return false;
-    }
-
-    LOG_DEBUG("Deserialized packet\n");
-    return true;
-}

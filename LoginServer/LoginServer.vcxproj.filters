@@ -44,6 +44,12 @@
     <ClCompile Include="Packet.pb.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="HPacketProcessor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HMatching.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -89,6 +95,12 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="HNetAPI.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HPacketProcessor.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HMatching.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -3,7 +3,7 @@
 
 void DBDLoginServer::Init()
 {
-    HCommand::InitCommand();
+    HCommand::Init();
     H_NETWORK.Init();
     H_NETWORK.CreateServer(m_serverPort);
     std::this_thread::sleep_for(std::chrono::milliseconds(10));

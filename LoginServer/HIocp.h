@@ -10,8 +10,6 @@ private:
     HANDLE      m_hIocp;
     HThreadPool m_threadPool;
 
-    std::mutex m_addPacketMutex;
-
 public:
     HIocp()  = default;
     ~HIocp() = default;

@@ -57,6 +57,3 @@
 #include "HNetAPI.h"
 
 using namespace std::chrono;
-
-#pragma hdrstop
-#include "Packet.pb.h"

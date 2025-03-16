@@ -32,12 +32,12 @@ void HSessionManager::DisConnect(SOCKET socket)
 {
     bool isDisconnect = false;
 
-    HSession HSession;
+    HSession session;
     {
         std::lock_guard<std::mutex> lock(m_mutex);
         if (m_hSessions.contains(socket))
         {
-            HSession = m_hSessions[socket];
+            session = m_hSessions[socket];
             m_disConnectQueue.push(socket);
             isDisconnect = true;
         }
@@ -47,8 +47,8 @@ void HSessionManager::DisConnect(SOCKET socket)
     {
         LOG_INFO("===============================================\n")
         LOG_INFO("Client disconnected : IP : {} Port : {}\n",
-                 inet_ntoa(HSession.address.sin_addr),
-                 ntohs(HSession.address.sin_port))
+                 inet_ntoa(session.address.sin_addr),
+                 ntohs(session.address.sin_port))
         LOG_INFO("===============================================\n")
     }
 }
@@ -59,7 +59,7 @@ bool HSessionManager::IsConnected(SOCKET socket)
     return m_hSessions.contains(socket);
 }
 
-void HSessionManager::Broadcast(const HPACKET* inPacket)
+void HSessionManager::Broadcast(const std::shared_ptr<HPACKET> inPacket)
 {
     std::lock_guard<std::mutex> lock(m_mutex);
     for (auto& [socket, userSession] : m_hSessions)

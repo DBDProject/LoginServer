@@ -8,7 +8,7 @@ HSession::HSession()
     socket = INVALID_SOCKET;
 }
 
-void HSession::AsyncSend(const HPACKET* inPacket)
+void HSession::AsyncSend(const std::shared_ptr<HPACKET> inPacket)
 {
     if (inPacket->ph.len > MAX_BUFFER_SIZE)
     {
@@ -18,7 +18,7 @@ void HSession::AsyncSend(const HPACKET* inPacket)
 
     LOG_DEBUG("Send ¿À¹ö·¦ »ý¼º\n")
     HOverlap* overlap = H_NETWORK.AddOverlap();
-    memcpy(overlap->buffer, reinterpret_cast<const char*>(inPacket), inPacket->ph.len);
+    memcpy(overlap->buffer, reinterpret_cast<const char*>(inPacket.get()), inPacket->ph.len);
 
     overlap->rwFlag     = RW_FLAG::SEND;
     overlap->wsabuf.buf = overlap->buffer;

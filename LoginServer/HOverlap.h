@@ -13,7 +13,7 @@ struct HOverlap : public OVERLAPPED
 {
     WSABUF           wsabuf;
     RW_FLAG          rwFlag;
-    char*            buffer;
+    char             buffer[MAX_BUFFER_SIZE];
     std::atomic<int> readPos;
     std::atomic<int> writePos;
 
@@ -21,23 +21,10 @@ struct HOverlap : public OVERLAPPED
     {
         ZeroMemory(static_cast<OVERLAPPED*>(this), sizeof(OVERLAPPED));
         rwFlag     = RW_FLAG::NONE;
-        buffer     = new char[MAX_BUFFER_SIZE];
         wsabuf.buf = buffer;
         wsabuf.len = MAX_BUFFER_SIZE;
         readPos    = 0;
         writePos   = 0;
-    }
-
-    ~HOverlap()
-    {
-        if (buffer != nullptr)
-            delete[] buffer;
-    }
-
-    char* GetBuffer()
-    {
-        LOG_DEBUG("오버랩 버퍼 반환\n")
-        return std::exchange(buffer, nullptr);
     }
 
     HOverlap(HOverlap&& other)           = delete;

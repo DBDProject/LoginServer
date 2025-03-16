@@ -8,7 +8,7 @@ private:
     inline static std::map<std::string, std::function<void(const std::string& command)>> m_commandMap;
 
 public:
-    static void InitCommand();
+    static void Init();
     static void ProcessCommand(const std::string& command);
     static void CommandHelp(const std::string& command);
     static void CommandExit(const std::string& command);
