@@ -23,9 +23,6 @@
     <ClCompile Include="HThreadPool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="HTimer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="HSessionManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -59,9 +56,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="HThreadPool.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="HTimer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="HSessionManager.h">

@@ -12,6 +12,8 @@ private:
 
 private:
     static void ProcessChatMsg(const SOCKET, const std::shared_ptr<HPACKET> packet);
+    static void ProcessKillerMatch(const SOCKET, const std::shared_ptr<HPACKET> packet);
+    static void ProcessSurvivorMatch(const SOCKET, const std::shared_ptr<HPACKET> packet);
 
 public:
     static void Init();

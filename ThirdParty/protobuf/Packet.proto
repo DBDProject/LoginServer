@@ -7,25 +7,14 @@ message Chat
 	string msg = 1;
 }
 
-message MatchSurvival
+message MatchPlayer
 {
 	uint32 playerCharacter = 1;
-}
-
-message MatchKiller
-{
-	uint32 killerCharacter = 1;
 }
 
 message JoinServer
 {
-	string killerIP;
-	string player1IP;
-	string player2IP;
-	string player3IP;
-	string player4IP;
-	uint32 playerCharacter = 1;
-	uint32 playerCharacter = 2;
-	uint32 playerCharacter = 3;
-	uint32 playerCharacter = 4;
+	string killerIP = 1;
+	repeated string playerIP = 2;
+	repeated uint32 playerCharacter = 3;
 }

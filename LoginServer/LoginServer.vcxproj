@@ -166,7 +166,6 @@ copy /Y "$(SolutionDir)ThirdParty\protobuf\Packet.pb.h" "$(ProjectDir)"
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="HTimer.cpp" />
     <ClCompile Include="HThreadPool.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -184,7 +183,6 @@ copy /Y "$(SolutionDir)ThirdParty\protobuf\Packet.pb.h" "$(ProjectDir)"
     <ClInclude Include="HSessionManager.h" />
     <ClInclude Include="Packet.pb.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="HTimer.h" />
     <ClInclude Include="HSingleton.h" />
     <ClInclude Include="HThreadPool.h" />
   </ItemGroup>

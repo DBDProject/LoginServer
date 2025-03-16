@@ -33,20 +33,21 @@ public:
 
 private:
     void InitWinSock();
+    void ProcessPacket();
+    bool AcceptClient();
 
 public:
     void Init() override;
     void Release() override;
+    void Update();
 
     void PrintSockError(int errorCode);
     bool HasSockError(int errorCode);
 
-    bool AcceptClient();
     void CreateServer(int port);
     void StopServer();
 
     void AddPacket(SOCKET socket, std::shared_ptr<HPACKET> packet);
-    void ProcessPacket();
 
     HOverlap* AddOverlap();
     bool      DeleteOverlap(HOverlap* overlap);

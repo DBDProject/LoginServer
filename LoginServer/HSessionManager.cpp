@@ -50,6 +50,9 @@ void HSessionManager::DisConnect(SOCKET socket)
                  inet_ntoa(session.address.sin_addr),
                  ntohs(session.address.sin_port))
         LOG_INFO("===============================================\n")
+
+        H_NETWORK.m_matching->DeleteSurvivorFromMatch(socket);
+        H_NETWORK.m_matching->DeleteKillerFromMatch(socket);
     }
 }
 

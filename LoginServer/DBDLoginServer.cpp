@@ -12,12 +12,6 @@ void DBDLoginServer::Init()
     workerThread.detach();
 }
 
-void DBDLoginServer::Update()
-{
-    m_systemTimer.Update();
-    H_NETWORK.m_sessionManager->DelUser();
-}
-
 void DBDLoginServer::Release()
 {
     H_NETWORK.Release();
@@ -47,14 +41,7 @@ void DBDLoginServer::Run()
     Init();
 
     while (HNetwork::m_isRunning)
-    {
-        Update();
-
-        if (!H_NETWORK.AcceptClient())
-            break;
-
-        H_NETWORK.ProcessPacket();
-    }
+        H_NETWORK.Update();
 
     Release();
     LOG_INFO("Server terminated\n")
