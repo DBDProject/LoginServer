@@ -10,6 +10,7 @@ void HPacketProcessor::Init()
     m_callback[HPACKET_TYPE::SEND_SURVIROR_MATCH] = HPacketProcessor::ProcessSurvivorMatch;
     m_callback[HPACKET_TYPE::SEND_KILLER_MATCH]   = HPacketProcessor::ProcessKillerMatch;
     m_callback[HPACKET_TYPE::SEND_MATCH_CANCEL]   = HPacketProcessor::ProcessMatchCancel;
+    m_callback[HPACKET_TYPE::SEND_MAP_LOAD_END]   = HPacketProcessor::ProcessMapLoadEnd;
 }
 
 void HPacketProcessor::ProcessChatMsg(const SOCKET socket, const std::shared_ptr<HPACKET> packet)
@@ -80,7 +81,14 @@ void HPacketProcessor::ProcessMatchCancel(const SOCKET socket, const std::shared
     LOG_INFO("[{}] : 매칭 취소\n", socket);
 }
 
-void HPacketProcessor::ProcessMapLoadEnd(const SOCKET, const std::shared_ptr<HPACKET> packet) {}
+void HPacketProcessor::ProcessMapLoadEnd(const SOCKET socket, const std::shared_ptr<HPACKET> packet)
+{
+    if (H_NETWORK.m_matching->IsMatchingPlayer(socket))
+    {
+        LOG_INFO("[{}] : 맵 로드 완료\n", socket);
+        H_NETWORK.m_matching->ReadyPlayer(socket);
+    }
+}
 
 void HPacketProcessor::Process(const SOCKET socket, const std::shared_ptr<HPACKET> packet)
 {
@@ -176,5 +184,22 @@ void HPacketProcessor::SendMatchAbandoned(const MatchInfo& matchInfo)
             session->AsyncSend(ackPacket);
     }
 
-    LOG_INFO("누군가 방을 나가 {}번방의 매칭이 파토남", matchInfo.matchID);
+    LOG_INFO("{}번방의 매칭이 강제로 종료되었습니다.\n", matchInfo.matchID);
+}
+
+void HPacketProcessor::SendMatchStart(const MatchInfo& matchInfo)
+{
+    std::shared_ptr<HPACKET> ackPacket = std::make_shared<HPACKET>();
+    ackPacket->ph.len                  = PACKET_HEADER_SIZE;
+    ackPacket->ph.type                 = HPACKET_TYPE::SEND_MATCH_START;
+    auto* session = H_NETWORK.m_sessionManager->GetSession(matchInfo.killer->socket);
+    if (session)
+        session->AsyncSend(ackPacket);
+    for (const auto& player : matchInfo.survivor)
+    {
+        session = H_NETWORK.m_sessionManager->GetSession(player->socket);
+        if (session)
+            session->AsyncSend(ackPacket);
+    }
+    LOG_INFO("{}번방의 게임이 시작되었습니다.\n", matchInfo.matchID);
 }

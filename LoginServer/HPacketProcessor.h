@@ -27,6 +27,7 @@ public:
     static void SendChatMsg(const SOCKET socket, const std::string& msg);
     static void SendMatchReady(const MatchInfo& matchInfo);
     static void SendMatchAbandoned(const MatchInfo& matchInfo);
+    static void SendMatchStart(const MatchInfo& matchInfo);
 
     template <class T>
     static bool SerializePacket(const HPACKET_TYPE packetType, const T& inSerializedData,

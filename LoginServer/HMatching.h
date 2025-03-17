@@ -41,7 +41,7 @@ private:
 
 private:
     void UpdateMatchQueue();
-    void UpdatePlayerReady(const SOCKET socket);
+    void CheckMatchReady(UINT matchID);
 
 public:
     HMatching()  = default;
@@ -55,10 +55,14 @@ public:
 
     void DeleteSurvivorFromMatch(const SOCKET inSocket);
     void DeleteKillerFromMatch(const SOCKET inSocket);
-    void DeleteWaitingPlayer(const SOCKET inSocket);
 
     void ReadyPlayer(const SOCKET socket);
     void DeleteMatch(const UINT matchID);
+
+    bool IsMatchingPlayer(const SOCKET socket);
+    UINT GetMatchIDInPlayer(const SOCKET socket);
+
+    std::shared_ptr<MatchInfo> GetMatchInfo(const UINT matchID);
 
     void PrintWaitingList();
     void Update();

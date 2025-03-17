@@ -53,6 +53,18 @@ void HSessionManager::DisConnect(SOCKET socket)
 
         H_NETWORK.m_matching->DeleteSurvivorFromMatch(socket);
         H_NETWORK.m_matching->DeleteKillerFromMatch(socket);
+
+        if (H_NETWORK.m_matching->IsMatchingPlayer(socket))
+        {
+            UINT                       matchID = H_NETWORK.m_matching->GetMatchIDInPlayer(socket);
+            std::shared_ptr<MatchInfo> match   = H_NETWORK.m_matching->GetMatchInfo(matchID);
+
+            if (match)
+            {
+                HPacketProcessor::SendMatchAbandoned(*match);
+                H_NETWORK.m_matching->DeleteMatch(matchID);
+            }
+        }
     }
 }
 

@@ -32,9 +32,13 @@ void HMatching::DeleteKillerFromMatch(const SOCKET inSocket)
     m_killerMap.erase(inSocket);
 }
 
-void HMatching::DeleteWaitingPlayer(const SOCKET inSocket)
+void HMatching::ReadyPlayer(const SOCKET socket)
 {
-    m_matchMap.erase(m_watingPlayer[inSocket]->matchID);
+    if (m_watingPlayer.contains(socket))
+    {
+        m_watingPlayer[socket]->isReady = true;
+        CheckMatchReady(m_watingPlayer[socket]->matchID);
+    }
 }
 
 void HMatching::DeleteMatch(const UINT matchID)
@@ -43,14 +47,41 @@ void HMatching::DeleteMatch(const UINT matchID)
 
     for (const auto& player : match->survivor)
     {
-        m_survivorMap[player->socket] = player;
+        m_watingPlayer.erase(player->socket);
     }
+
+    m_watingPlayer.erase(match->killer->socket);
+    m_matchMap.erase(matchID);
+}
+
+bool HMatching::IsMatchingPlayer(const SOCKET socket)
+{
+    if (m_watingPlayer.contains(socket))
+        return true;
+
+    return false;
+}
+
+UINT HMatching::GetMatchIDInPlayer(const SOCKET socket)
+{
+    if (m_watingPlayer.contains(socket))
+        return m_watingPlayer[socket]->matchID;
+    else
+        return 0;
+}
+
+std::shared_ptr<MatchInfo> HMatching::GetMatchInfo(const UINT matchID)
+{
+    if (m_matchMap.contains(matchID))
+        return m_matchMap[matchID];
+    else
+        return nullptr;
 }
 
 void HMatching::PrintWaitingList()
 {
     LOG_INFO("===============================================\n");
-    LOG_INFO("Match Player : {}\n\n", m_setMatchPlayer);
+    LOG_INFO("현재 매칭 가능한 인원 수 : {}\n\n", m_setMatchPlayer);
     LOG_INFO("Survivor List\n");
     for (const auto& [socket, player] : m_survivorMap)
     {
@@ -119,17 +150,27 @@ void HMatching::UpdateMatchQueue()
     }
 }
 
-void HMatching::UpdatePlayerReady(const SOCKET socket)
+void HMatching::CheckMatchReady(UINT matchID)
 {
-    // if (m_matchQueue.empty())
-    //     return;
-    // auto match = m_matchQueue.front();
-    // if (match->isSurvivorReady && match->isKillerReady)
-    //{
-    //     m_matchQueue.pop();
-    //     m_survivorMap.clear();
-    //     m_killerMap.clear();
-    // }
+    auto match   = m_matchMap[matchID];
+    bool isReady = true;
+    for (const auto& player : match->survivor)
+    {
+        if (!player->isReady)
+        {
+            isReady = false;
+            break;
+        }
+    }
+
+    if (!match->killer->isReady)
+        isReady = false;
+
+    if (isReady)
+    {
+        HPacketProcessor::SendMatchStart(*match);
+        DeleteMatch(matchID);
+    }
 }
 
 void HMatching::Update()
