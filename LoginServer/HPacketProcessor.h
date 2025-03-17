@@ -3,6 +3,8 @@
 #include "pch.h"
 #include "Packet.pb.h"
 
+struct MatchInfo;
+
 class HPacketProcessor
 {
 private:
@@ -14,10 +16,17 @@ private:
     static void ProcessChatMsg(const SOCKET, const std::shared_ptr<HPACKET> packet);
     static void ProcessKillerMatch(const SOCKET, const std::shared_ptr<HPACKET> packet);
     static void ProcessSurvivorMatch(const SOCKET, const std::shared_ptr<HPACKET> packet);
+    static void ProcessMatchCancel(const SOCKET, const std::shared_ptr<HPACKET> packet);
+    static void ProcessMapLoadEnd(const SOCKET, const std::shared_ptr<HPACKET> packet);
 
 public:
     static void Init();
     static void Process(const SOCKET, const std::shared_ptr<HPACKET> packet);
+
+    static void SendChatMsg(const std::string& msg);
+    static void SendChatMsg(const SOCKET socket, const std::string& msg);
+    static void SendMatchReady(const MatchInfo& matchInfo);
+    static void SendMatchAbandoned(const MatchInfo& matchInfo);
 
     template <class T>
     static bool SerializePacket(const HPACKET_TYPE packetType, const T& inSerializedData,

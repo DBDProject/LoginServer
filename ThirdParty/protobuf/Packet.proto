@@ -12,9 +12,13 @@ message MatchPlayer
 	uint32 playerCharacter = 1;
 }
 
-message JoinServer
+message MatchReady
 {
-	string killerIP = 1;
-	repeated string playerIP = 2;
-	repeated uint32 playerCharacter = 3;
+	uint32 maxPlayer = 1;
+	uint32 isServer = 2;
+	string killerIP = 3;
+	uint32 killerCharacter = 4;
+	repeated string survivorIP = 5;
+	repeated uint32 survivorCharacter = 6;
 }
+

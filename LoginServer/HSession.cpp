@@ -63,3 +63,10 @@ void HSession::AsyncRecv()
         }
     }
 }
+
+std::string HSession::GetAddress()
+{
+    char ip[INET_ADDRSTRLEN];
+    inet_ntop(AF_INET, &address.sin_addr, ip, sizeof(ip));
+    return ip;
+}

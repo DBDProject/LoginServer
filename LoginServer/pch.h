@@ -33,7 +33,7 @@
     #pragma comment(lib, "protobuf/lib/libprotobuf.lib")
 #endif
 
-#define DEBUG_PRINT  // 회색 글자 맘에 안들면 이거 주석
+// #define DEBUG_PRINT  // 회색 글자 맘에 안들면 이거 주석
 #define FMT_UNICODE 0
 #include <fmt/core.h>
 #include <fmt/color.h>

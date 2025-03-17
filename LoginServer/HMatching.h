@@ -12,7 +12,7 @@ enum class ECharacterType : UINT8
 struct PlayerInfo
 {
     SOCKET         socket;
-    sockaddr_in    address;
+    std::string    address;
     ECharacterType characterType;
     bool           isReady;
     UINT           matchID;
@@ -20,10 +20,11 @@ struct PlayerInfo
 
 struct MatchInfo
 {
-    std::list<PlayerInfo> survivor;
-    PlayerInfo            killer;
+    std::list<std::shared_ptr<PlayerInfo>> survivor;
+    std::shared_ptr<PlayerInfo>            killer;
 
-    unsigned int matchPlayer;
+    UINT matchPlayer;
+    UINT matchID;
 };
 
 class HMatching
@@ -31,13 +32,16 @@ class HMatching
 private:
     std::map<SOCKET, std::shared_ptr<PlayerInfo>> m_survivorMap;
     std::map<SOCKET, std::shared_ptr<PlayerInfo>> m_killerMap;
+    std::map<SOCKET, std::shared_ptr<PlayerInfo>> m_watingPlayer;
     std::map<UINT, std::shared_ptr<MatchInfo>>    m_matchMap;
 
-    UINT m_setMatchPlayer = 3;
+    UINT m_setMatchPlayer = 2;
+
+    inline static UINT m_matchID = 0;
 
 private:
     void UpdateMatchQueue();
-    void UpdatePlayerReady();
+    void UpdatePlayerReady(const SOCKET socket);
 
 public:
     HMatching()  = default;
@@ -51,6 +55,10 @@ public:
 
     void DeleteSurvivorFromMatch(const SOCKET inSocket);
     void DeleteKillerFromMatch(const SOCKET inSocket);
+    void DeleteWaitingPlayer(const SOCKET inSocket);
+
+    void ReadyPlayer(const SOCKET socket);
+    void DeleteMatch(const UINT matchID);
 
     void PrintWaitingList();
     void Update();

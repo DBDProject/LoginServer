@@ -299,6 +299,8 @@ bool HNetwork::AcceptClient()
     }
     else
     {
+        int flag = 1;
+        setsockopt(clientSock, IPPROTO_TCP, TCP_NODELAY, (char*)&flag, sizeof(flag));
         m_sessionManager->Connect(clientSock, addr);
         HSession* pSession = m_sessionManager->GetSession(clientSock);
         CreateIoCompletionPort((HANDLE)clientSock, m_iocp.GetIocpHandle(), (ULONG_PTR)pSession, 0);

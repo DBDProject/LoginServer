@@ -74,14 +74,7 @@ void HCommand::CommandSay(const std::string& command)
     msg = command.substr(4);
 
     serverPrefix.append(msg);
-    HProtocol::Chat          packetData;
-    std::shared_ptr<HPACKET> packet = std::make_shared<HPACKET>();
-
-    packetData.set_msg(HNetAPI::ConvertCP949ToUTF8(serverPrefix));
-    HPacketProcessor::SerializePacket(HPACKET_TYPE::CHAT_MSG, packetData, *packet);
-
-    LOG_INFO("{}\n", serverPrefix);
-    H_NETWORK.m_sessionManager->Broadcast(packet);
+    HPacketProcessor::SendChatMsg(serverPrefix);
 }
 
 void HCommand::CommandMatchList(const std::string& command)
@@ -109,4 +102,6 @@ void HCommand::CommandSetMatchPlayer(const std::string& command)
 
     H_NETWORK.m_matching->SetMatchPlayer(player);
     LOG_INFO("매칭 최대 인원이 {}명으로 설정되었습니다.\n", player);
+    HPacketProcessor::SendChatMsg("[Server]매칭 최대 인원이 " + std::to_string(player) +
+                                  "명으로 설정되었습니다.");
 }
