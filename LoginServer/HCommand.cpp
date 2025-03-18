@@ -94,9 +94,9 @@ void HCommand::CommandSetMatchPlayer(const std::string& command)
     }
     int player = 0;
     iss >> player;
-    if (player <= 2)
+    if (player < 2)
     {
-        LOG_INFO("인원 수는 2보다 커야합니다.\n");
+        LOG_INFO("인원 수는 2이상이여야 합니다.\n");
         return;
     }
 
