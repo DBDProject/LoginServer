@@ -129,17 +129,19 @@ void HPacketProcessor::SendMatchReady(const MatchInfo& matchInfo)
     packetData.set_killerip(HNetAPI::ConvertCP949ToUTF8(matchInfo.killer->address));
     packetData.set_killercharacter((uint32_t)matchInfo.killer->characterType);
 
-    HPacketProcessor::SerializePacket(HPACKET_TYPE::SEND_MATCH_READY, packetData, *packet);
-    for (const auto& player : matchInfo.survivor)
-        H_NETWORK.m_sessionManager->GetSession(player->socket)->AsyncSend(packet);
-
-    packetData.set_isserver(true);
-
     for (const auto& player : matchInfo.survivor)
     {
         packetData.add_survivorcharacter((uint32_t)player->characterType);
         packetData.add_survivorip(HNetAPI::ConvertCP949ToUTF8(player->address));
     }
+
+    HPacketProcessor::SerializePacket(HPACKET_TYPE::SEND_MATCH_READY, packetData, *packet);
+
+    for (const auto& player : matchInfo.survivor)
+        H_NETWORK.m_sessionManager->GetSession(player->socket)->AsyncSend(packet);
+
+    packetData.set_isserver(true);
+
 
     HPacketProcessor::SerializePacket(HPACKET_TYPE::SEND_MATCH_READY, packetData, *packet);
     H_NETWORK.m_sessionManager->GetSession(matchInfo.killer->socket)->AsyncSend(packet);
